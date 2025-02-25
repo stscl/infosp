@@ -280,33 +280,82 @@ inline InfoTheo::PatternSeries vec2pat(const Rcpp::CharacterVector& v)
 /********************************************************************
  *  mat2patmat
  *
- *  Convert an R list of vectors into InfoTheo::Matrix.
- *
- *  Each element of the list is treated as one variable.
- *  Each variable is converted into a PatternSeries.
+ *  Convert an R matrix (Integer / Numeric / Character)
+ *  into InfoTheo::Matrix.
  *
  *  Structure:
  *
- *      R:
- *          list( var1, var2, var3 )
+ *      R matrix:
+ *          n rows  = observations
+ *          p cols  = variables
  *
- *      C++:
- *          Matrix[variable][observation]
+ *      C++ InfoTheo::Matrix:
+ *          Matrix[var][obs]
+ *
+ *  Each column of the R matrix is converted using vec2pat,
+ *  producing a PatternSeries. The PatternSeries objects are
+ *  stored sequentially into the Matrix container.
+ *
+ *  NA handling:
+ *      Delegated to vec2pat.
  *
  ********************************************************************/
 inline InfoTheo::Matrix mat2patmat(SEXP x)
 {
-    if (!Rf_isNewList(x))
-        Rcpp::stop("Matrix must be a list of vectors.");
-
-    Rcpp::List lst(x);
+    if (!Rf_isMatrix(x))
+        Rcpp::stop("Input must be a matrix.");
 
     InfoTheo::Matrix mat;
-    mat.reserve(lst.size());
 
-    for (SEXP col : lst)
+    switch (TYPEOF(x))
     {
-        mat.push_back( to_series(col) );
+        case INTSXP:
+        {
+            Rcpp::IntegerMatrix m(x);
+            const size_t p = static_cast<size_t>(m.ncol());
+            mat.reserve(p);
+
+            for (size_t j = 0; j < p; ++j)
+            {
+                Rcpp::IntegerVector col = m(_, j);
+                mat.push_back(vec2pat(col));
+            }
+
+            break;
+        }
+
+        case REALSXP:
+        {
+            Rcpp::NumericMatrix m(x);
+            const size_t p = static_cast<size_t>(m.ncol());
+            mat.reserve(p);
+
+            for (size_t j = 0; j < p; ++j)
+            {
+                Rcpp::NumericVector col = m(_, j);
+                mat.push_back(vec2pat(col));
+            }
+
+            break;
+        }
+
+        case STRSXP:
+        {
+            Rcpp::CharacterMatrix m(x);
+            const size_t p = static_cast<size_t>(m.ncol());
+            mat.reserve(p);
+
+            for (size_t j = 0; j < p; ++j)
+            {
+                Rcpp::CharacterVector col = m(_, j);
+                mat.push_back(vec2pat(col));
+            }
+
+            break;
+        }
+
+        default:
+            Rcpp::stop("Matrix must be Integer, Numeric, or Character.");
     }
 
     return mat;
