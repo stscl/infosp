@@ -1,4 +1,11 @@
 #include <vector>
+#include <cstdint>
+#include <string>
+#include <limits>
+#include <iterator>
+#include <numeric>
+#include <algorithm>
+#include "infotheo.hpp"
 #include <Rcpp.h>
 
 // Function to convert Rcpp::List to std::vector<std::vector<size_t>> (the `nb` object)
@@ -50,4 +57,210 @@ Rcpp::List std2nb(const std::vector<std::vector<size_t>>& nb) {
   }
 
   return result;
+}
+
+/********************************************************************
+ *  index2base4
+ *
+ *  Convert a non negative integer index into base 4 representation.
+ *
+ *  Each base 4 digit is stored in one uint8_t.
+ *  Only the lowest 2 bits of each uint8_t are meaningful.
+ *
+ *  Example:
+ *      idx = 6
+ *      base 4 = 12
+ *      stored as {2,1}  (little endian)
+ *
+ *  This design allows unlimited categorical cardinality while
+ *  remaining fully compatible with the 2 bit packing scheme
+ *  used inside InfoTheo.
+ *
+ ********************************************************************/
+inline std::vector<uint8_t> index2base4(uint64_t idx)
+{
+    std::vector<uint8_t> digits;
+
+    if (idx == 0)
+    {
+        digits.push_back(0);
+        return digits;
+    }
+
+    while (idx > 0)
+    {
+        digits.push_back(static_cast<uint8_t>(idx & 0x3)); // idx % 4
+        idx >>= 2;                                        // idx /= 4
+    }
+
+    return digits; // little endian base 4
+}
+
+
+/********************************************************************
+ *  vec2pat
+ *
+ *  Convert an R vector (Integer / Numeric / Character)
+ *  into InfoTheo::PatternSeries.
+ *
+ *  Design:
+ *      - Extract unique non NA values
+ *      - Sort from low to high
+ *      - Assign increasing index 0,1,2,...
+ *      - Encode index in base 4
+ *      - Each observation becomes one Pattern
+ *
+ *  Result:
+ *      PatternSeries of size N
+ *      Each Pattern contains base 4 digits representing category
+ *
+ *  NA handling:
+ *      NA is encoded as single digit {0}
+ *
+ ********************************************************************/
+
+// -------- IntegerVector --------
+inline InfoTheo::PatternSeries vec2pat(const Rcpp::IntegerVector& v)
+{
+    InfoTheo::PatternSeries series;
+    series.reserve(v.size());
+
+    // 1. Collect unique non NA values
+    std::vector<int> uniq;
+    uniq.reserve(v.size());
+
+    for (int val : v)
+        if (val != NA_INTEGER)
+            uniq.push_back(val);
+
+    std::sort(uniq.begin(), uniq.end());
+    uniq.erase(std::unique(uniq.begin(), uniq.end()), uniq.end());
+
+    // 2. Map value → index
+    std::unordered_map<int, uint64_t> dict;
+    for (uint64_t i = 0; i < uniq.size(); ++i)
+        dict[uniq[i]] = i;
+
+    // 3. Encode each observation
+    for (int val : v)
+    {
+        if (val == NA_INTEGER)
+        {
+            series.push_back( InfoTheo::Pattern{0} );
+        }
+        else
+        {
+            uint64_t idx = dict[val];
+            series.push_back( index2base4(idx) );
+        }
+    }
+
+    return series;
+}
+
+// -------- NumericVector --------
+inline InfoTheo::PatternSeries vec2pat(const Rcpp::NumericVector& v)
+{
+    InfoTheo::PatternSeries series;
+    series.reserve(v.size());
+
+    std::vector<double> uniq;
+    uniq.reserve(v.size());
+
+    for (double val : v)
+        if (!Rcpp::NumericVector::is_na(val))
+            uniq.push_back(val);
+
+    std::sort(uniq.begin(), uniq.end());
+    uniq.erase(std::unique(uniq.begin(), uniq.end()), uniq.end());
+
+    std::unordered_map<double, uint64_t> dict;
+    for (uint64_t i = 0; i < uniq.size(); ++i)
+        dict[uniq[i]] = i;
+
+    for (double val : v)
+    {
+        if (Rcpp::NumericVector::is_na(val))
+        {
+            series.push_back( InfoTheo::Pattern{0} );
+        }
+        else
+        {
+            uint64_t idx = dict[val];
+            series.push_back( index2base4(idx) );
+        }
+    }
+
+    return series;
+}
+
+// -------- CharacterVector --------
+inline InfoTheo::PatternSeries vec2pat(const Rcpp::CharacterVector& v)
+{
+    InfoTheo::PatternSeries series;
+    series.reserve(v.size());
+
+    std::vector<std::string> uniq;
+    uniq.reserve(v.size());
+
+    for (Rcpp::String s : v)
+        if (s != NA_STRING)
+            uniq.push_back(Rcpp::as<std::string>(s));
+
+    std::sort(uniq.begin(), uniq.end());
+    uniq.erase(std::unique(uniq.begin(), uniq.end()), uniq.end());
+
+    std::unordered_map<std::string, uint64_t> dict;
+    for (uint64_t i = 0; i < uniq.size(); ++i)
+        dict[uniq[i]] = i;
+
+    for (Rcpp::String s : v)
+    {
+        if (s == NA_STRING)
+        {
+            series.push_back( InfoTheo::Pattern{0} );
+        }
+        else
+        {
+            uint64_t idx = dict[Rcpp::as<std::string>(s)];
+            series.push_back( index2base4(idx) );
+        }
+    }
+
+    return series;
+}
+
+/********************************************************************
+ *  mat2patmat
+ *
+ *  Convert an R list of vectors into InfoTheo::Matrix.
+ *
+ *  Each element of the list is treated as one variable.
+ *  Each variable is converted into a PatternSeries.
+ *
+ *  Structure:
+ *
+ *      R:
+ *          list( var1, var2, var3 )
+ *
+ *      C++:
+ *          Matrix[variable][observation]
+ *
+ ********************************************************************/
+inline InfoTheo::Matrix mat2patmat(SEXP x)
+{
+    if (!Rf_isNewList(x))
+        Rcpp::stop("Matrix must be a list of vectors.");
+
+    Rcpp::List lst(x);
+
+    InfoTheo::Matrix mat;
+    mat.reserve(lst.size());
+
+    for (SEXP col : lst)
+    {
+        mat.push_back( to_series(col) );
+    }
+
+    return mat;
 }
