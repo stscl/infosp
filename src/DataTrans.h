@@ -119,7 +119,7 @@ inline InfoTheo::PatternSeries vec2pat(const Rcpp::CharacterVector& v);
  *  mat2patmat
  *
  *  Convert an R matrix (Integer / Numeric / Character)
- *  into InfoTheo::Matrix.
+ *  into std::vector<std::vector<std::vector<uint8_t>>>.
  *
  *  Structure:
  *
@@ -127,17 +127,18 @@ inline InfoTheo::PatternSeries vec2pat(const Rcpp::CharacterVector& v);
  *          n rows  = observations
  *          p cols  = variables
  *
- *      C++ InfoTheo::Matrix:
+ *      C++ std::vector<std::vector<std::vector<uint8_t>>>:
  *          Matrix[var][obs]
  *
  *  Each column of the R matrix is converted using vec2pat,
- *  producing a PatternSeries. The PatternSeries objects are
- *  stored sequentially into the Matrix container.
+ *  producing a PatternSeries (std::vector<std::vector<uint8_t>>). 
+ *  The PatternSeries objects are stored sequentially into the 
+ *  Matrix container (std::vector<std::vector<std::vector<uint8_t>>>).
  *
  *  NA handling:
  *      Delegated to vec2pat.
  *
  ********************************************************************/
-inline InfoTheo::Matrix mat2patmat(SEXP x);
+inline std::vector<std::vector<std::vector<uint8_t>>> mat2patmat(SEXP x);
 
 #endif // DataTrans_H
