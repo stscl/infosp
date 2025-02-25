@@ -214,7 +214,7 @@ inline std::vector<std::vector<uint8_t>> vec2pat(const Rcpp::NumericVector& v)
     uniq.reserve(v.size());
 
     for (double val : v)
-        if (!Rcpp::is_na(val))
+        if (!Rcpp::NumericVector::is_na(val))
             uniq.push_back(val);
 
     std::sort(uniq.begin(), uniq.end());
@@ -226,7 +226,7 @@ inline std::vector<std::vector<uint8_t>> vec2pat(const Rcpp::NumericVector& v)
 
     for (double val : v)
     {
-        if (Rcpp::is_na(val))
+        if (Rcpp::NumericVector::is_na(val))
         {
             series.push_back( std::vector<uint8_t>{0} );
         }
