@@ -59,10 +59,10 @@
  ********************************************************************/
 
 // Function to convert Rcpp::List to std::vector<std::vector<size_t>> (the `nb` object)
-inline std::vector<std::vector<size_t>> nb2std(const Rcpp::List& nb);
+std::vector<std::vector<size_t>> nb2std(const Rcpp::List& nb);
 
 // Function to convert std::vector<std::vector<size_t>> (the `nb` object) to Rcpp::List
-inline Rcpp::List std2nb(const std::vector<std::vector<size_t>>& nb);
+Rcpp::List std2nb(const std::vector<std::vector<size_t>>& nb);
 
 /********************************************************************
  *  index2base4
@@ -82,7 +82,7 @@ inline Rcpp::List std2nb(const std::vector<std::vector<size_t>>& nb);
  *  used inside InfoTheo.
  *
  ********************************************************************/
-inline std::vector<uint8_t> index2base4(uint64_t idx);
+std::vector<uint8_t> index2base4(uint64_t idx);
 
 /********************************************************************
  *  vec2pat
@@ -107,13 +107,13 @@ inline std::vector<uint8_t> index2base4(uint64_t idx);
  ********************************************************************/
 
 // -------- IntegerVector --------
-inline std::vector<std::vector<uint8_t>> vec2pat(const Rcpp::IntegerVector& v);
+std::vector<std::vector<uint8_t>> vec2pat(const Rcpp::IntegerVector& v);
 
 // -------- NumericVector --------
-inline std::vector<std::vector<uint8_t>> vec2pat(const Rcpp::NumericVector& v);
+std::vector<std::vector<uint8_t>> vec2pat(const Rcpp::NumericVector& v);
 
 // -------- CharacterVector --------
-inline std::vector<std::vector<uint8_t>> vec2pat(const Rcpp::CharacterVector& v);
+std::vector<std::vector<uint8_t>> vec2pat(const Rcpp::CharacterVector& v);
 
 /********************************************************************
  *  mat2patmat
@@ -139,6 +139,6 @@ inline std::vector<std::vector<uint8_t>> vec2pat(const Rcpp::CharacterVector& v)
  *      Delegated to vec2pat.
  *
  ********************************************************************/
-inline std::vector<std::vector<std::vector<uint8_t>>> mat2patmat(SEXP x);
+std::vector<std::vector<std::vector<uint8_t>>> mat2patmat(SEXP x);
 
 #endif // DataTrans_H
