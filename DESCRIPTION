@@ -11,7 +11,7 @@ Authors@R: c(
              role = c("aut"),
              comment = c(ORCID = "0009-0002-6518-3613"))
     )
-Description: What the package does (one paragraph).
+Description: Integrating phase space reconstruction, symbolic dynamics, and information-theoretic methods to enable spatially explicit analysis of geometric and attribute information in spatial data. Supports univariate spatial complexity assessment, bivariate spatial association evaluation, and multivariate spatial interaction characterization via tailored information-theoretic measures.
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
