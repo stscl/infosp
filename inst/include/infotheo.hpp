@@ -99,38 +99,30 @@ inline double ln_to_log_base(double ln_value, double base)
  *
  * Default base = 2.0 (bits).
  */
-inline double entropy_count(
-    const std::vector<std::size_t>& counts,
+inline double Entropy(
+    const std::vector<size_t>& counts,
     double log_base = 2.0)
 {
   validate_log_base(log_base);
 
   double total = 0.0;
-  for (std::size_t c : counts)
-  {
+  for (size_t c : counts) {
     total += static_cast<double>(c);
   }
 
-  if (total <= 0.0)
-  {
+  if (total <= 0.0) {
     return std::numeric_limits<double>::quiet_NaN();
   }
 
-  const double inv_log_base = 1.0 / std::log(log_base);
-
-  double h = 0.0;
-  for (std::size_t c : counts)
-  {
-    if (c == 0)
-    {
-      continue;
-    }
-
+  double h_nats = 0.0;
+  for (size_t c : counts) {
+    if (c == 0) continue;
     double p = static_cast<double>(c) / total;
-    h -= p * (std::log(p) * inv_log_base);
+    h_nats -= p * std::log(p);  // accumulate in nats
   }
 
-  return h;
+  // Convert from nats to desired base
+  return h_nats / std::log(log_base);
 }
 
 // ================================================================
@@ -149,27 +141,24 @@ inline double entropy_count(
  *
  * Normalization uses log-sum-exp to avoid overflow.
  */
-inline double joint_entropy_count(
-    const std::vector<std::vector<std::size_t>>& mat,
-    const std::vector<std::size_t>& vars,
+inline double JE(
+    const std::vector<std::vector<size_t>>& mat,
+    const std::vector<size_t>& vars,
     double log_base = 2.0)
 {
   validate_log_base(log_base);
 
-  if (vars.empty())
-  {
+  if (vars.empty()){
     throw std::invalid_argument("vars must not be empty.");
   }
 
-  for (std::size_t v : vars)
-  {
-    if (v >= mat.size())
-    {
+  for (size_t v : vars){
+    if (v >= mat.size()){
       throw std::out_of_range("Variable index out of range.");
     }
   }
 
-  const std::size_t category_count = mat[vars[0]].size();
+  const size_t category_count = mat[vars[0]].size();
 
   // Store log-weights
   std::vector<double> ln_weights;
@@ -177,21 +166,17 @@ inline double joint_entropy_count(
 
   double max_ln_w = -std::numeric_limits<double>::infinity();
 
-  for (std::size_t k = 0; k < category_count; ++k)
-  {
+  for (size_t k = 0; k < category_count; ++k){
     double ln_w = 0.0;
     bool valid = true;
 
-    for (std::size_t v : vars)
-    {
-      if (k >= mat[v].size())
-      {
+    for (size_t v : vars){
+      if (k >= mat[v].size()){
         throw std::out_of_range("Category index out of range.");
       }
 
-      std::size_t c = mat[v][k];
-      if (c == 0)
-      {
+      size_t c = mat[v][k];
+      if (c == 0){
         valid = false;
         break;
       }
@@ -199,32 +184,27 @@ inline double joint_entropy_count(
       ln_w += std::log(static_cast<double>(c));
     }
 
-    if (!valid)
-    {
+    if (!valid){
       continue;
     }
 
     ln_weights.push_back(ln_w);
-    if (ln_w > max_ln_w)
-    {
+    if (ln_w > max_ln_w){
       max_ln_w = ln_w;
     }
   }
 
-  if (ln_weights.empty())
-  {
+  if (ln_weights.empty()){
     return std::numeric_limits<double>::quiet_NaN();
   }
 
   // Compute normalization denominator in log domain
   double sum_exp = 0.0;
-  for (double ln_w : ln_weights)
-  {
+  for (double ln_w : ln_weights){
     sum_exp += std::exp(ln_w - max_ln_w);
   }
 
-  if (sum_exp <= 0.0)
-  {
+  if (sum_exp <= 0.0){
     return std::numeric_limits<double>::quiet_NaN();
   }
 
@@ -252,22 +232,20 @@ inline double joint_entropy_count(
 /*
  * H(X | Y) = H(X, Y) - H(Y)
  */
-inline double ce_count(
-    const std::vector<std::vector<std::size_t>>& mat,
-    const std::vector<std::size_t>& X,
-    const std::vector<std::size_t>& Y,
+inline double CE(
+    const std::vector<std::vector<size_t>>& mat,
+    const std::vector<size_t>& X,
+    const std::vector<size_t>& Y,
     double log_base = 2.0)
 {
-  if (X.empty() || Y.empty())
-  {
+  if (X.empty() || Y.empty()){
     throw std::invalid_argument("X and Y must not be empty.");
   }
 
-  std::vector<std::size_t> XY = X;
+  std::vector<size_t> XY = X;
   XY.insert(XY.end(), Y.begin(), Y.end());
 
-  return joint_entropy_count(mat, XY, log_base)
-    - joint_entropy_count(mat, Y,  log_base);
+  return JE(mat, XY, log_base) - JE(mat, Y, log_base);
 }
 
 // ================================================================
@@ -277,27 +255,24 @@ inline double ce_count(
 /*
  * I(X1; ...; Xn) = sum_i H(Xi) - H(X1, ..., Xn)
  */
-inline double mi_count(
-    const std::vector<std::vector<std::size_t>>& mat,
-    const std::vector<std::size_t>& vars,
+inline double MI(
+    const std::vector<std::vector<size_t>>& mat,
+    const std::vector<size_t>& vars,
     double log_base = 2.0)
 {
-  if (vars.size() < 2)
-  {
+  if (vars.size() < 2){
     throw std::invalid_argument("At least two variables are required.");
   }
 
   double sum_h = 0.0;
-  for (std::size_t v : vars)
-  {
-    if (v >= mat.size())
-    {
+  for (std::size_t v : vars){
+    if (v >= mat.size()){
       throw std::out_of_range("Variable index out of range.");
     }
-    sum_h += entropy_count(mat[v], log_base);
+    sum_h += Entropy(mat[v], log_base);
   }
 
-  double h_joint = joint_entropy_count(mat, vars, log_base);
+  double h_joint = JE(mat, vars, log_base);
   return sum_h - h_joint;
 }
 
@@ -309,32 +284,31 @@ inline double mi_count(
  * I(X ; Y | Z) =
  *   H(X, Z) + H(Y, Z) - H(Z) - H(X, Y, Z)
  */
-inline double cmi_count(
-    const std::vector<std::vector<std::size_t>>& mat,
-    const std::vector<std::size_t>& X,
-    const std::vector<std::size_t>& Y,
-    const std::vector<std::size_t>& Z,
+inline double CMI(
+    const std::vector<std::vector<size_t>>& mat,
+    const std::vector<size_t>& X,
+    const std::vector<size_t>& Y,
+    const std::vector<size_t>& Z,
     double log_base = 2.0)
 {
-  if (X.empty() || Y.empty() || Z.empty())
-  {
+  if (X.empty() || Y.empty() || Z.empty()){
     throw std::invalid_argument("X, Y and Z must not be empty.");
   }
 
-  std::vector<std::size_t> XZ = X;
+  std::vector<size_t> XZ = X;
   XZ.insert(XZ.end(), Z.begin(), Z.end());
 
-  std::vector<std::size_t> YZ = Y;
+  std::vector<size_t> YZ = Y;
   YZ.insert(YZ.end(), Z.begin(), Z.end());
 
-  std::vector<std::size_t> XYZ = X;
+  std::vector<size_t> XYZ = X;
   XYZ.insert(XYZ.end(), Y.begin(), Y.end());
   XYZ.insert(XYZ.end(), Z.begin(), Z.end());
 
-  return joint_entropy_count(mat, XZ,  log_base)
-    + joint_entropy_count(mat, YZ,  log_base)
-    - joint_entropy_count(mat, Z,   log_base)
-    - joint_entropy_count(mat, XYZ, log_base);
+  return JE(mat, XZ,  log_base)
+    + JE(mat, YZ,  log_base)
+    - JE(mat, Z,   log_base)
+    - JE(mat, XYZ, log_base);
 }
 
 } // namespace InfoTheo
