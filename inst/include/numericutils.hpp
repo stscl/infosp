@@ -1,11 +1,3 @@
-#ifndef NUMERIC_UTILS_HPP
-#define NUMERIC_UTILS_HPP
-
-#include <cmath>
-#include <algorithm>
-#include <limits>
-#include <initializer_list>
-
 /**
  * @file NumericUtils.hpp
  * @brief Utility functions for safe and consistent floating-point operations.
@@ -19,6 +11,17 @@
  * Author: Wenbo Lv
  * License: GPL-3
  */
+
+#ifndef NUMERICUTILS_HPP
+#define NUMERICUTILS_HPP
+
+#include <cmath>
+#include <algorithm>
+#include <limits>
+#include <initializer_list>
+
+namespace NumericUtils
+{
 
 // ==============================
 // Common numeric constants
@@ -50,4 +53,6 @@ inline bool doubleNearlyEqual(double x, double y,
   return diff <= std::max(rel_tol * scale, abs_tol);
 }
 
-#endif // NUMERIC_UTILS_HPP
+} // namespace NumericUtils
+
+#endif // NUMERICUTILS_HPP
