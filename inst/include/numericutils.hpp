@@ -1,5 +1,5 @@
-#ifndef NUMERIC_UTILS_HPP
-#define NUMERIC_UTILS_HPP
+#ifndef NUMERICUTILS_HPP
+#define NUMERICUTILS_HPP
 
 #include <cmath>
 #include <algorithm>
@@ -50,4 +50,4 @@ inline bool doubleNearlyEqual(double x, double y,
   return diff <= std::max(rel_tol * scale, abs_tol);
 }
 
-#endif // NUMERIC_UTILS_HPP
+#endif // NUMERICUTILS_HPP
