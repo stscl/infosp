@@ -151,7 +151,7 @@ inline std::vector<std::vector<double>> GenSignatureSpace(
 
             // NaN diff remains NaN
             if (!std::isnan(diff)) {
-                if (doubleNearlyEqual(diff, 0.0)) {
+                if (NumericUtils::doubleNearlyEqual(diff, 0.0)) {
                     out_row[j] = 0.0;
                 } else if (relative) {
                     out_row[j] = diff / row[j];
@@ -235,7 +235,7 @@ inline std::vector<std::vector<uint8_t>> GenPatternSpace(
                 has_nan = true;
                 pat.push_back(static_cast<uint8_t>(0));
             }
-            else if (doubleNearlyEqual(v, 0.0)) {
+            else if (NumericUtils::doubleNearlyEqual(v, 0.0)) {
                 pat.push_back(static_cast<uint8_t>(2));
             }
             else if (v > 0.0) {
