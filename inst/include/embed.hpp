@@ -181,10 +181,10 @@ inline Matrix LatticeEmbedding(
     }
 
     /* Remove all-NaN columns */
-    std::vector<Index> validCols;
-    for (Index c = 0; c < embed.front().size(); ++c) {
+    std::vector<size_t> validCols;
+    for (size_t c = 0; c < embed.front().size(); ++c) {
         bool allNaN = true;
-        for (Index r = 0; r < embed.size(); ++r) {
+        for (size_t r = 0; r < embed.size(); ++r) {
             if (!std::isnan(embed[r][c])) {
                 allNaN = false;
                 break;
@@ -196,9 +196,9 @@ inline Matrix LatticeEmbedding(
     if (validCols.size() == embed.front().size()) return embed;
 
     Matrix filtered(n);
-    for (Index r = 0; r < n; ++r) {
+    for (size_t r = 0; r < n; ++r) {
         filtered[r].reserve(validCols.size());
-        for (Index c : validCols) {
+        for (size_t c : validCols) {
             filtered[r].push_back(embed[r][c]);
         }
     }
