@@ -212,14 +212,14 @@ inline Matrix LatticeEmbedding(
 /**
  * @brief Convert 2D grid coordinates to linear index.
  */
-inline Index GridIndex(Index row, Index col, Index totalCols) {
+inline size_t GridIndex(size_t row, size_t col, size_t totalCols) {
     return row * totalCols + col;
 }
 
 /**
  * @brief Convert linear index to 2D grid coordinates.
  */
-inline std::pair<Index, Index> GridRowCol(Index index, Index totalCols) {
+inline std::pair<size_t, size_t> GridRowCol(size_t index, size_t totalCols) {
     return { index / totalCols, index % totalCols };
 }
 
@@ -230,8 +230,8 @@ inline Vector GridMatToVec(const Matrix& mat) {
     Vector out;
     if (mat.empty()) return out;
 
-    const Index rows = mat.size();
-    const Index cols = mat.front().size();
+    const size_t rows = mat.size();
+    const size_t cols = mat.front().size();
     out.reserve(rows * cols);
 
     for (const auto& row : mat) {
@@ -243,16 +243,16 @@ inline Vector GridMatToVec(const Matrix& mat) {
 /**
  * @brief Reshape a vector into a grid matrix.
  */
-inline Matrix GridVecToMat(const Vector& vec, Index nrow) {
+inline Matrix GridVecToMat(const Vector& vec, size_t nrow) {
     if (nrow == 0 || vec.size() % nrow != 0) {
         throw std::invalid_argument("GridVecToMat: incompatible dimensions.");
     }
 
-    const Index ncol = vec.size() / nrow;
+    const size_t ncol = vec.size() / nrow;
     Matrix mat(nrow, Vector(ncol));
 
-    for (Index i = 0; i < nrow; ++i) {
-        for (Index j = 0; j < ncol; ++j) {
+    for (size_t i = 0; i < nrow; ++i) {
+        for (size_t j = 0; j < ncol; ++j) {
             mat[i][j] = vec[i * ncol + j];
         }
     }
@@ -264,20 +264,20 @@ inline Matrix GridVecToMat(const Vector& vec, Index nrow) {
  */
 inline Matrix LaggedGridValues(
     const Matrix& mat,
-    Index lag
+    size_t lag
 ) {
     if (mat.empty() || mat.front().empty()) return {};
 
-    const Index rows = mat.size();
-    const Index cols = mat.front().size();
-    const Index total = rows * cols;
+    const size_t rows = mat.size();
+    const size_t cols = mat.front().size();
+    const size_t total = rows * cols;
     const double NaN = std::numeric_limits<double>::quiet_NaN();
 
     if (lag == 0) {
         Matrix out;
         out.reserve(total);
-        for (Index i = 0; i < rows; ++i) {
-            for (Index j = 0; j < cols; ++j) {
+        for (size_t i = 0; i < rows; ++i) {
+            for (size_t j = 0; j < cols; ++j) {
                 out.push_back({ mat[i][j] });
             }
         }
@@ -295,10 +295,10 @@ inline Matrix LaggedGridValues(
 
     Matrix out(total, Vector(offsets.size(), NaN));
 
-    for (Index r = 0; r < rows; ++r) {
-        for (Index c = 0; c < cols; ++c) {
-            const Index id = GridIndex(r, c, cols);
-            for (Index k = 0; k < offsets.size(); ++k) {
+    for (size_t r = 0; r < rows; ++r) {
+        for (size_t c = 0; c < cols; ++c) {
+            const size_t id = GridIndex(r, c, cols);
+            for (size_t k = 0; k < offsets.size(); ++k) {
                 const int nr = static_cast<int>(r) + offsets[k].first;
                 const int nc = static_cast<int>(c) + offsets[k].second;
                 if (nr >= 0 && nr < static_cast<int>(rows) &&
@@ -316,24 +316,24 @@ inline Matrix LaggedGridValues(
  */
 inline Matrix GridEmbedding(
     const Matrix& mat,
-    Index E,
-    Index tau,
+    size_t E = 3,
+    size_t tau = 1,
     Index style = 1
 ) {
     if (mat.empty() || mat.front().empty() || E == 0) return {};
 
-    const Index rows = mat.size();
-    const Index cols = mat.front().size();
-    const Index total = rows * cols;
+    const size_t rows = mat.size();
+    const size_t cols = mat.front().size();
+    const size_t total = rows * cols;
     const double NaN = std::numeric_limits<double>::quiet_NaN();
 
     Matrix embed(total, Vector(E, NaN));
 
-    auto fill_column = [&](Index col, Index lag) {
+    auto fill_column = [&](size_t col, size_t lag) {
         Matrix lagged = LaggedGridValues(mat, lag);
-        for (Index i = 0; i < lagged.size(); ++i) {
+        for (size_t i = 0; i < lagged.size(); ++i) {
             double sum = 0.0;
-            Index cnt = 0;
+            size_t cnt = 0;
             for (double v : lagged[i]) {
                 if (!std::isnan(v)) {
                     sum += v;
@@ -346,23 +346,23 @@ inline Matrix GridEmbedding(
 
     if (tau == 0) {
         Vector flat = GridMatToVec(mat);
-        for (Index i = 0; i < total; ++i) embed[i][0] = flat[i];
-        for (Index k = 1; k < E; ++k) fill_column(k, k);
+        for (size_t i = 0; i < total; ++i) embed[i][0] = flat[i];
+        for (size_t k = 1; k < E; ++k) fill_column(k, k);
     }
     else if (style == 0) {
         Vector flat = GridMatToVec(mat);
-        for (Index i = 0; i < total; ++i) embed[i][0] = flat[i];
-        for (Index k = 1; k < E; ++k) fill_column(k, k * tau);
+        for (size_t i = 0; i < total; ++i) embed[i][0] = flat[i];
+        for (size_t k = 1; k < E; ++k) fill_column(k, k * tau);
     }
     else {
-        for (Index k = 0; k < E; ++k) fill_column(k, (k + 1) * tau);
+        for (size_t k = 0; k < E; ++k) fill_column(k, (k + 1) * tau);
     }
 
     /* remove all-NaN columns */
     std::vector<Index> validCols;
-    for (Index c = 0; c < embed.front().size(); ++c) {
+    for (size_t c = 0; c < embed.front().size(); ++c) {
         bool allNaN = true;
-        for (Index r = 0; r < embed.size(); ++r) {
+        for (size_t r = 0; r < embed.size(); ++r) {
             if (!std::isnan(embed[r][c])) {
                 allNaN = false;
                 break;
@@ -374,9 +374,9 @@ inline Matrix GridEmbedding(
     if (validCols.size() == embed.front().size()) return embed;
 
     Matrix filtered(total);
-    for (Index r = 0; r < total; ++r) {
+    for (size_t r = 0; r < total; ++r) {
         filtered[r].reserve(validCols.size());
-        for (Index c : validCols) {
+        for (size_t c : validCols) {
             filtered[r].push_back(embed[r][c]);
         }
     }
