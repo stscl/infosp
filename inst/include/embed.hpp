@@ -151,7 +151,7 @@ inline Matrix LaggedValues(
             if (newIndices.empty()) {
                 out[i] = { std::numeric_limits<double>::quiet_NaN() };
             } else {
-                std::sort(newIndices.begin(), newIndices.end());
+                // std::sort(newIndices.begin(), newIndices.end()); // no need to sorted
                 out[i].reserve(newIndices.size());
                 for (size_t j : newIndices) {
                     out[i].push_back(vec[j]);
