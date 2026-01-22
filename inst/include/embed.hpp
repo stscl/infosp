@@ -227,30 +227,42 @@ inline Matrix LatticeEmbedding(
         }
     }
 
-    auto get_neighbors = [&](size_t lag) -> const NeighborMat& {
-        auto it = cache.find(lag);
-        if (it != cache.end()) return it->second;
-        return cache.emplace(lag, LaggedNeighbors(nb, lag)).first->second;
-    };
-
-
     for (size_t lag = start; lag <= end; lag += step) {
-        const NeighborMat& cur = get_neighbors(lag);
+        const NeighborMat& cur  = cache.at(lag);
+        const NeighborMat& prev = (lag > 0 ? cache.at(lag - 1) : cur);
+
         const size_t col = (lag - start) / step;
 
         for (size_t i = 0; i < n; ++i) {
             double sum = 0.0;
             size_t cnt = 0;
 
-            for (size_t j : cur[i]) {
-                double v = vec[j];
-                if (!std::isnan(v)) {
-                    sum += v;
-                    ++cnt;
+            const auto& A = cur[i];
+            const auto& B = (lag > 0 ? prev[i] : std::vector<size_t>{});
+
+            auto itA = A.begin();
+            auto itB = B.begin();
+
+            while (itA != A.end()) {
+                if (itB == B.end() || *itA < *itB) {
+                    double v = vec[*itA];
+                    if (!std::isnan(v)) {
+                        sum += v;
+                        ++cnt;
+                    }
+                    ++itA;
+                } else if (*itB < *itA) {
+                    ++itB;
+                } else {
+                    ++itA;
+                    ++itB;
                 }
             }
+
             if (cnt > 0) {
                 embed[i][col] = sum / cnt;
+            } else {
+                embed[i][col] = NaN;   // no lagged value
             }
         }
     }
