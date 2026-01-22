@@ -103,20 +103,52 @@ inline NeighborMat LaggedNeighbors(
 /**
  * @brief Extract lagged values from a lattice vector.
  *
- * Each node collects values from its lagged neighbors.
+ * Each node collects values from its lagged neighbors (no recursively included).
  */
 inline Matrix LaggedValues(
     const Vector& vec,
     const NeighborMat& nb,
     size_t lag
 ) {
-    NeighborMat neighbors = LaggedNeighbors(nb, lag);
-    const size_t n = neighbors.size();
-
+    const size_t n = nb.size();
     Matrix out(n);
+
+    if (lag == 0) {
+        for (size_t i = 0; i < n; ++i) {
+            out[i] = { vec[i] };
+        }
+        return out;
+    }
+    
+    // Remove duplicates with previous lag (if lag > 1)
+    NeighborMat prevNeighbors = LaggedNeighbors(nb, lag-1);
+    NeighborMat curNeighbors(n);
+
     for (size_t i = 0; i < n; ++i) {
-        out[i].reserve(neighbors[i].size());
-        for (size_t j : neighbors[i]) {
+        // Convert previous lagged results to a set for fast lookup
+        std::unordered_set<size_t> prevSet(prevNeighbors[i].begin(), prevNeighbors[i].end());
+        // Remove duplicates from current lagged results
+        std::vector<size_t> newIndices;
+        for (size_t prev_nb in prevSet){
+            for (size_t cur_nb : nb[prev_nb]) {
+                if (prevSet.find(cur_nb) == prevSet.end()) {
+                    newIndices.push_back(cur_nb);
+                }
+            }
+        }
+
+        // If the new indices are empty, set it to a special value (e.g., std::numeric_limits<int>::min())
+        if (newIndices.empty()) {
+            newIndices.push_back(std::numeric_limits<int>::min());
+        }
+
+        // Update the lagged results
+        curNeighbors[i] = newIndices;
+    }
+    
+    for (size_t i = 0; i < n; ++i) {
+        out[i].reserve(curNeighbors[i].size());
+        for (size_t j :  curNeighbors[i]) {
             out[i].push_back(vec[j]);
         }
     }
