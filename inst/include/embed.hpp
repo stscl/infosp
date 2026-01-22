@@ -36,6 +36,7 @@
 #include <vector>
 #include <cmath>
 #include <limits>
+#include <numeric>
 #include <algorithm>
 #include <unordered_set>
 #include <unordered_map>
@@ -78,25 +79,31 @@ inline NeighborMat LaggedNeighbors(
         for (size_t i = 0; i < n; ++i) {
             result[i] = { i };
         }
-        return result;
-    }
-
-    NeighborMat prev = LaggedNeighbors(nb, lag - 1);
-
-    for (size_t i = 0; i < n; ++i) {
-        std::unordered_set<size_t> merged;
-        merged.reserve(prev[i].size() + nb[i].size());
-
-        for (size_t v : prev[i]) {
-            merged.insert(v);
-            for (size_t u : nb[v]) {
-                merged.insert(u);
-            }
+    } else if (lag >= n) {
+        std::vector<size_t> v(n);
+        std::iota(v.begin(), v.end(), size_t{0});
+        for (size_t i = 0; i < n; ++i) {
+            result[i] = v;
         }
+    } else {
+        NeighborMat prev = LaggedNeighbors(nb, lag - 1);
 
-        result[i].assign(merged.begin(), merged.end());
-        std::sort(result[i].begin(), result[i].end());
+        for (size_t i = 0; i < n; ++i) {
+            std::unordered_set<size_t> merged;
+            merged.reserve(prev[i].size() + nb[i].size());
+
+            for (size_t v : prev[i]) {
+                merged.insert(v);
+                for (size_t u : nb[v]) {
+                    merged.insert(u);
+                }
+            }
+
+            result[i].assign(merged.begin(), merged.end());
+            std::sort(result[i].begin(), result[i].end());
+        }
     }
+    
     return result;
 }
 
