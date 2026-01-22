@@ -89,18 +89,21 @@ inline NeighborMat LaggedNeighbors(
         NeighborMat prev = LaggedNeighbors(nb, lag - 1);
 
         for (size_t i = 0; i < n; ++i) {
-            std::unordered_set<size_t> merged;
-            merged.reserve(prev[i].size() + nb[i].size());
-
-            for (size_t v : prev[i]) {
-                merged.insert(v);
-                for (size_t u : nb[v]) {
-                    merged.insert(u);
+            if (prev[i].size() == n) {
+                result[i].assign(prev[i].begin(), prev[i].end());
+                std::sort(result[i].begin(), result[i].end());
+            } else {
+                std::unordered_set<size_t> merged;
+                merged.reserve(prev[i].size() + nb[i].size());
+                for (size_t v : prev[i]) {
+                    merged.insert(v);
+                    for (size_t u : nb[v]) {
+                        merged.insert(u);
+                    }
                 }
+                result[i].assign(merged.begin(), merged.end());
+                std::sort(result[i].begin(), result[i].end());
             }
-
-            result[i].assign(merged.begin(), merged.end());
-            std::sort(result[i].begin(), result[i].end());
         }
     }
     
