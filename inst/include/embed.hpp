@@ -79,7 +79,7 @@ inline NeighborMat LaggedNeighbors(
         for (size_t i = 0; i < n; ++i) {
             result[i] = { i };
         }
-    } else if (lag >= n) {
+    } else if (lag >= n - 1) {
         std::vector<size_t> v(n);
         std::iota(v.begin(), v.end(), size_t{0});
         for (size_t i = 0; i < n; ++i) {
@@ -126,7 +126,7 @@ inline Matrix LaggedValues(
         for (size_t i = 0; i < n; ++i) {
             out[i] = { vec[i] };
         }
-    } else if (lag >= n) {
+    } else if (lag >= n - 1) {
         for (size_t i = 0; i < n; ++i) {
             out[i] = vec;
         }
@@ -204,6 +204,7 @@ inline Matrix LatticeEmbedding(
     for (size_t lag = start; lag <= end; lag += 1) {
         if (cache.find(lag) == cache.end()){
             auto it = cache.find(lag-1);
+            // assert(it != cache.end());
             const NeighborMat &prev = it->second;
 
             NeighborMat cur(n);
@@ -268,9 +269,7 @@ inline Matrix LatticeEmbedding(
             }
 
             if (cnt > 0) {
-                embed[i][col] = sum / cnt;
-            } else {
-                embed[i][col] = NaN;   // no lagged value
+                embed[i][col] = sum / cnt; // valid lagged value
             }
         }
     }
