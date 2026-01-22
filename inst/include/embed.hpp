@@ -187,6 +187,7 @@ inline Matrix LatticeEmbedding(
 
     Matrix embed(n, Vector(E, NaN));
     std::unordered_map<size_t, NeighborMat> cache;
+    cache.reserve(end + 1);
 
     size_t start = (style == 0 ? 0 : (tau == 0 ? 0 : tau));
     size_t step  = (tau == 0 ? 1 : tau);
