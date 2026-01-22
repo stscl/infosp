@@ -399,7 +399,7 @@ inline Matrix GridEmbedding(
     }
 
     /* remove all-NaN columns */
-    std::vector<Index> validCols;
+    std::vector<size_t> validCols;
     for (size_t c = 0; c < embed.front().size(); ++c) {
         bool allNaN = true;
         for (size_t r = 0; r < embed.size(); ++r) {
