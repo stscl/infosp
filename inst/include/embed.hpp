@@ -105,7 +105,7 @@ inline NeighborMat LaggedNeighbors(
             }
         }
     }
-    
+
     return result;
 }
 
@@ -139,7 +139,7 @@ inline Matrix LaggedValues(
             std::unordered_set<size_t> prevSet(prevNeighbors[i].begin(), prevNeighbors[i].end());
             // Remove duplicates from previous lagged results
             std::vector<size_t> newIndices;
-            for (size_t prev_nb in prevSet){
+            for (size_t prev_nb : prevSet){
                 for (size_t cur_nb : nb[prev_nb]) {
                     if (prevSet.find(cur_nb) == prevSet.end()) {
                         newIndices.push_back(cur_nb);
@@ -159,7 +159,7 @@ inline Matrix LaggedValues(
             }
         }
     }
-    
+
     return out;
 }
 
@@ -196,11 +196,11 @@ inline Matrix LatticeEmbedding(
     cache.reserve(end + 1);
 
     if (start == 0){
-        cache.emplace(start, LaggedNeighbors(nb, start)); 
+        cache.emplace(start, LaggedNeighbors(nb, start));
     } else {
         cache.emplace(start-1, LaggedNeighbors(nb, start-1));
     }
-    
+
     for (size_t lag = start; lag <= end; lag += 1) {
         if (cache.find(lag) == cache.end()){
             auto it = cache.find(lag-1);
