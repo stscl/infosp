@@ -46,3 +46,36 @@ Rcpp::List RcppLaggedValues4Lattice(const Rcpp::NumericVector& vec,
 
   return result;
 }
+
+// Wrapper function to generate embedding for spatial lattice data
+// [[Rcpp::export(rng = false)]]
+Rcpp::NumericMatrix RcppGenLatticeEmbedding(const Rcpp::NumericVector& vec,
+                                            const Rcpp::List& nb,
+                                            int E = 3,
+                                            int tau = 1,
+                                            int style = 1) {
+  // Convert Rcpp::NumericVector to std::vector<double>
+  std::vector<double> vec_std = Rcpp::as<std::vector<double>>(vec);
+
+  // Convert Rcpp::List to std::vector<std::vector<size_t>>
+  std::vector<std::vector<size_t>> nb_vec = nb2std(nb);
+
+  // Generate embedding
+  std::vector<std::vector<double>> embeddings =
+    Embed::GenLatticeEmbedding(vec_std, nb_vec,
+                               static_cast<size_t>(std::abs(E)),
+                               static_cast<size_t>(std::abs(tau)),
+                               static_cast<size_t>(std::abs(style)));
+
+  // Convert std::vector<std::vector<double>> to Rcpp::NumericMatrix
+  size_t rows = embeddings.size();
+  size_t cols = embeddings[0].size();
+  Rcpp::NumericMatrix result(rows, cols);
+  for (size_t i = 0; i < rows; ++i) {
+    for (size_t j = 0; j < cols; ++j) {
+      result(i, j) = embeddings[i][j];
+    }
+  }
+
+  return result;
+}
