@@ -33,10 +33,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RcppGenLatticeEmbedding
+Rcpp::NumericMatrix RcppGenLatticeEmbedding(const Rcpp::NumericVector& vec, const Rcpp::List& nb, int E, int tau, int style);
+RcppExport SEXP _infosp_RcppGenLatticeEmbedding(SEXP vecSEXP, SEXP nbSEXP, SEXP ESEXP, SEXP tauSEXP, SEXP styleSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type vec(vecSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type nb(nbSEXP);
+    Rcpp::traits::input_parameter< int >::type E(ESEXP);
+    Rcpp::traits::input_parameter< int >::type tau(tauSEXP);
+    Rcpp::traits::input_parameter< int >::type style(styleSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppGenLatticeEmbedding(vec, nb, E, tau, style));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_infosp_RcppLaggedNeighbors4Lattice", (DL_FUNC) &_infosp_RcppLaggedNeighbors4Lattice, 2},
     {"_infosp_RcppLaggedValues4Lattice", (DL_FUNC) &_infosp_RcppLaggedValues4Lattice, 3},
+    {"_infosp_RcppGenLatticeEmbedding", (DL_FUNC) &_infosp_RcppGenLatticeEmbedding, 5},
     {NULL, NULL, 0}
 };
 

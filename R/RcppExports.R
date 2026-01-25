@@ -9,3 +9,7 @@ RcppLaggedValues4Lattice <- function(vec, nb, lag = 1L) {
     .Call(`_infosp_RcppLaggedValues4Lattice`, vec, nb, lag)
 }
 
+RcppGenLatticeEmbedding <- function(vec, nb, E = 3L, tau = 1L, style = 1L) {
+    .Call(`_infosp_RcppGenLatticeEmbedding`, vec, nb, E, tau, style)
+}
+
