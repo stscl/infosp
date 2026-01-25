@@ -21,9 +21,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RcppLaggedValues4Lattice
+Rcpp::List RcppLaggedValues4Lattice(const Rcpp::NumericVector& vec, const Rcpp::List& nb, int lag);
+RcppExport SEXP _infosp_RcppLaggedValues4Lattice(SEXP vecSEXP, SEXP nbSEXP, SEXP lagSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type vec(vecSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type nb(nbSEXP);
+    Rcpp::traits::input_parameter< int >::type lag(lagSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppLaggedValues4Lattice(vec, nb, lag));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_infosp_RcppLaggedNeighbors4Lattice", (DL_FUNC) &_infosp_RcppLaggedNeighbors4Lattice, 2},
+    {"_infosp_RcppLaggedValues4Lattice", (DL_FUNC) &_infosp_RcppLaggedValues4Lattice, 3},
     {NULL, NULL, 0}
 };
 

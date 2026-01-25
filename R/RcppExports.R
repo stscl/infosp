@@ -2,6 +2,10 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 RcppLaggedNeighbors4Lattice <- function(nb, lag = 1L) {
-    .Call('_infosp_RcppLaggedNeighbors4Lattice', PACKAGE = 'infosp', nb, lag)
+    .Call(`_infosp_RcppLaggedNeighbors4Lattice`, nb, lag)
+}
+
+RcppLaggedValues4Lattice <- function(vec, nb, lag = 1L) {
+    .Call(`_infosp_RcppLaggedValues4Lattice`, vec, nb, lag)
 }
 
