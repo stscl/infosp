@@ -47,11 +47,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RcppLaggedValues4Grid
+Rcpp::NumericMatrix RcppLaggedValues4Grid(const Rcpp::NumericMatrix& mat, int lag);
+RcppExport SEXP _infosp_RcppLaggedValues4Grid(SEXP matSEXP, SEXP lagSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< int >::type lag(lagSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppLaggedValues4Grid(mat, lag));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_infosp_RcppLaggedNeighbors4Lattice", (DL_FUNC) &_infosp_RcppLaggedNeighbors4Lattice, 2},
     {"_infosp_RcppLaggedValues4Lattice", (DL_FUNC) &_infosp_RcppLaggedValues4Lattice, 3},
     {"_infosp_RcppGenLatticeEmbedding", (DL_FUNC) &_infosp_RcppGenLatticeEmbedding, 5},
+    {"_infosp_RcppLaggedValues4Grid", (DL_FUNC) &_infosp_RcppLaggedValues4Grid, 2},
     {NULL, NULL, 0}
 };
 
