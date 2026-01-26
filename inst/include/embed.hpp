@@ -423,21 +423,117 @@ inline Matrix GenGridEmbedding(
 
     Matrix embed(total, Vector(E, NaN));
 
-    auto fill_column = [&](size_t col, size_t lag) {
-        Matrix lagged = LaggedValues4Grid(mat, lag);
-        for (size_t i = 0; i < lagged.size(); ++i) {
-            double sum = 0.0;
-            size_t cnt = 0;
-            for (double v : lagged[i]) {
-                if (!std::isnan(v)) {
-                    sum += v;
-                    ++cnt;
-                }
-            }
-            if (cnt > 0) embed[i][col] = sum / cnt;
-        }
+    /* -------------------------------------------------------
+     Clamp lag to avoid unnecessary oversized neighborhoods
+     Maximum meaningful lag in a grid is max(rows, cols) - 1
+     ------------------------------------------------------- */
+    const size_t maxLag =
+    (std::max(rows, cols) > 0 ? std::max(rows, cols) - 1 : 0);
+
+    auto clamp_lag = [&](size_t lag) -> size_t {
+      return (lag > maxLag ? maxLag : lag);
     };
 
+    /* ---------------------------------------
+     Safe multiplication with overflow guard
+     --------------------------------------- */
+    auto safe_mul_lag = [&](size_t a, size_t b) -> size_t {
+      if (a == 0 || b == 0) return 0;
+      if (a > std::numeric_limits<size_t>::max() / b) {
+        return maxLag;   // overflow -> clamp
+      }
+      return clamp_lag(a * b);
+    };
+
+    // /*
+    //  * Repeats the grid data with a lag offset. The implementation is straightforward
+    //  * but involves redundant computations for large datasets.
+    //  * Kept here as a reference to the original approach.
+    //  */
+    // auto fill_column = [&](size_t col, size_t lag) {
+    //   Matrix lagged = LaggedValues4Grid(mat, lag);
+    //   for (size_t i = 0; i < lagged.size(); ++i) {
+    //     double sum = 0.0;
+    //     size_t cnt = 0;
+    //     for (double v : lagged[i]) {
+    //       if (!std::isnan(v)) {
+    //         sum += v;
+    //         ++cnt;
+    //       }
+    //     }
+    //     if (cnt > 0) embed[i][col] = sum / cnt;
+    //   }
+    // };
+
+    /* -------------------------
+     Cache offsets per lag
+     ------------------------- */
+    std::unordered_map<size_t, std::vector<std::pair<int,int>>> offsetCache;
+    offsetCache.reserve(E + 2);
+
+    auto get_offsets = [&](size_t lag)
+      -> const std::vector<std::pair<int,int>>&
+      {
+        const size_t effLag = clamp_lag(lag);
+
+        auto it = offsetCache.find(effLag);
+        if (it != offsetCache.end()) return it->second;
+
+        std::vector<std::pair<int,int>> offsets;
+        if (effLag == 0) {
+          offsets.emplace_back(0, 0);
+        } else {
+          const int L = static_cast<int>(effLag);
+          for (int dx = -L; dx <= L; ++dx) {
+            for (int dy = -L; dy <= L; ++dy) {
+              if (std::max(std::abs(dx), std::abs(dy)) == L) {
+                offsets.emplace_back(dx, dy);
+              }
+            }
+          }
+        }
+
+        auto res = offsetCache.emplace(effLag, std::move(offsets));
+        return res.first->second;
+      };
+
+    /* -------------------------
+     Fill one embedding column
+     ------------------------- */
+    auto fill_column = [&](size_t col, size_t lag) {
+      const auto& offsets = get_offsets(lag);
+
+      for (size_t r = 0; r < rows; ++r) {
+        for (size_t c = 0; c < cols; ++c) {
+          const size_t id = GridIndex(r, c, cols);
+
+          double sum = 0.0;
+          size_t cnt = 0;
+
+          for (const auto& off : offsets) {
+            const int nr = static_cast<int>(r) + off.first;
+            const int nc = static_cast<int>(c) + off.second;
+            if (nr >= 0 && nr < static_cast<int>(rows) &&
+                nc >= 0 && nc < static_cast<int>(cols)) {
+              double v = mat[nr][nc];
+              if (!std::isnan(v)) {
+                sum += v;
+                ++cnt;
+              }
+            }
+          }
+
+          if (cnt > 0) {
+            embed[id][col] = sum / cnt;
+          }
+          // else: keep NaN
+        }
+      }
+    };
+
+    /* -------------------------
+     Generate embeddings
+     ------------------------- */
     if (tau == 0) {
         Vector flat = GridMatToVec(mat);
         for (size_t i = 0; i < total; ++i) embed[i][0] = flat[i];
