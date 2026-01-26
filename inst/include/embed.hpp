@@ -703,7 +703,7 @@ inline Matrix GenTSEmbedding(
   if (keep.size() == E) return emb;
 
   // Create cleaned matrix with only columns having valid data
-  Matrix cleaned;
+  Matrix cleaned(N);
   for (size_t i = 0; i < N; ++i) {
     cleaned[i].reserve(keep.size());
     for (size_t j : keep) {
