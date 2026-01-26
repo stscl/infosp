@@ -378,6 +378,12 @@ inline Matrix LaggedValues4Grid(
         return out;
     }
 
+    // Since mat is non-empty and mat[0] is non-empty, rows >= 1 and cols >= 1
+    const size_t maxLag = std::max(rows, cols) - 1;
+    if (lag > maxLag) {
+      lag = maxLag;
+    }
+
     std::vector<std::pair<int,int>> offsets;
     for (int dx = -static_cast<int>(lag); dx <= static_cast<int>(lag); ++dx) {
         for (int dy = -static_cast<int>(lag); dy <= static_cast<int>(lag); ++dy) {
