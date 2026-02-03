@@ -119,13 +119,12 @@ inline Matrix LaggedValues4Lattice(
     const size_t n = nb.size();
     Matrix out(n);
 
+    const size_t max_lag = n - 1;
+    lag = std::min(lag, max_lag);
+
     if (lag == 0) {
         for (size_t i = 0; i < n; ++i) {
             out[i] = { vec[i] };
-        }
-    } else if (lag >= n - 1) {
-        for (size_t i = 0; i < n; ++i) {
-            out[i] = vec;
         }
     } else {
         // Remove duplicates with previous lag (if lag > 1)
