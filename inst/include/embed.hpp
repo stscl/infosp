@@ -293,31 +293,36 @@ inline Matrix GenLatticeEmbedding(
             double sum = 0.0;
             size_t cnt = 0;
 
-            const auto& A = cur[i];
-            const auto& B = prev[i];
+            const auto& cur_set = cur[i];
+            const auto& prev_set = prev[i];
 
-            auto itA = A.begin();
-            auto itB = B.begin();
+            auto it_cur = cur_set.begin();
+            auto it_prev = prev_set.begin();
+            const auto it_prev_end = prev_set.end();
 
-            while (itA != A.end()) {
-                if (itB == B.end() || *itA < *itB) {
-                    double v = vec[*itA];
-                    if (!std::isnan(v)) {
-                        sum += v;
-                        ++cnt;
-                    }
-                    ++itA;
-                } else if (*itB < *itA) {
-                    ++itB;
-                } else {
-                    ++itA;
-                    ++itB;
+            // Compute set difference: cur \ prev (both sorted, prev ⊆ cur guaranteed)
+            while (it_cur != cur_set.end() && it_prev != it_prev_end) {
+                if (*it_cur < *it_prev) {
+                    const double v = vec[*it_cur];
+                    if (!std::isnan(v)) { sum += v; ++cnt; }
+                    ++it_cur;
+                } else if (*it_prev < *it_cur) {
+                    ++it_prev;
+                } else {  // *it_cur == *it_prev → skip intersection
+                    ++it_cur;
+                    ++it_prev;
                 }
             }
 
-            if (cnt > 0) {
-                embed[i][col] = sum / cnt; // valid lagged value
+            // Remaining elements in cur are guaranteed to be in the difference set
+            // (since prev ⊆ cur and prev is exhausted)
+            while (it_cur != cur_set.end()) {
+                const double v = vec[*it_cur];
+                if (!std::isnan(v)) { sum += v; ++cnt; }
+                ++it_cur;
             }
+
+            if (cnt > 0) embed[i][col] = sum / cnt;
         }
     }
 
