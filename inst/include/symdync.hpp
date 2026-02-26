@@ -21,6 +21,10 @@
  *       - Converts a continuous signature matrix into compact
  *         discrete pattern representations using uint8 encoding.
  *
+ *    3. CountSignProp
+ *       - Compares two pattern spaces and computes the
+ *         proportion of sign agreement and disagreement.
+ *
  *  Data conventions:
  *
  *    Signature matrix:
@@ -48,6 +52,26 @@
  *      NA_rm = false
  *        NaN values are encoded explicitly as symbol 0 inside the
  *        pattern vector.
+ *
+ *  Sign comparison rule:
+ *
+ *      Valid comparison requires both symbols != 0.
+ *
+ *      Positive agreement:
+ *          (1,1), (2,2), (3,3)
+ *
+ *      Negative agreement:
+ *          (1,3), (3,1)
+ *
+ *      Symbol 2 only matches positively with 2.
+ *
+ *  Output of CountSignProp:
+ *
+ *      std::vector<double> size 2:
+ *          [ positive_ratio , negative_ratio ]
+ *
+ *      If no valid comparisons exist,
+ *      both values are returned as NaN.
  *
  *  Design principles:
  *
