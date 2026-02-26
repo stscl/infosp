@@ -352,6 +352,12 @@ inline std::vector<double> CountSignProp(
         const auto& row1 = pat1[i];
         const auto& row2 = pat2[i];
 
+        // Skip rows that represent invalid pattern {0}
+        if ((row1.size() == 1 && row1[0] == 0) ||
+            (row2.size() == 1 && row2[0] == 0)) {
+            continue;
+        }
+
         if (row1.size() != row2.size()) {
             throw std::invalid_argument("Pattern rows must have same length.");
         }
