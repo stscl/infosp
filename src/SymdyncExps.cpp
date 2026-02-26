@@ -64,3 +64,21 @@ Rcpp::CharacterVector RcppGenPatternSpace(
     auto pat = SymDync::GenPatternSpace(input, NA_rm);
     return pat2vec(pat);
 }
+
+// Wrapper function to compute sign agreement proportions between two pattern vectors
+// [[Rcpp::export(rng = false)]]
+Rcpp::NumericVector RcppCountSignProp(
+    Rcpp::CharacterVector pat1,
+    Rcpp::CharacterVector pat2
+)
+{
+    auto p1 = vec2pat(pat1);
+    auto p2 = vec2pat(pat2);
+
+    auto result = SymDync::CountSignProp(p1, p2);
+
+    return Rcpp::NumericVector::create(
+        result[0],
+        result[1]
+    );
+}
