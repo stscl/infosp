@@ -165,7 +165,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // RcppGenPatternSpace
-Rcpp::CharacterMatrix RcppGenPatternSpace(Rcpp::NumericMatrix mat, bool NA_rm);
+Rcpp::CharacterVector RcppGenPatternSpace(Rcpp::NumericMatrix mat, bool NA_rm);
 RcppExport SEXP _infosp_RcppGenPatternSpace(SEXP matSEXP, SEXP NA_rmSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
