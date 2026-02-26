@@ -153,6 +153,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RcppGenSignatureSpace
+Rcpp::NumericMatrix RcppGenSignatureSpace(const Rcpp::NumericMatrix& mat, bool relative);
+RcppExport SEXP _infosp_RcppGenSignatureSpace(SEXP matSEXP, SEXP relativeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< bool >::type relative(relativeSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppGenSignatureSpace(mat, relative));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_infosp_RcppLaggedNeighbors4Lattice", (DL_FUNC) &_infosp_RcppLaggedNeighbors4Lattice, 3},
@@ -166,6 +177,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_infosp_RcppCE", (DL_FUNC) &_infosp_RcppCE, 5},
     {"_infosp_RcppMI", (DL_FUNC) &_infosp_RcppMI, 5},
     {"_infosp_RcppCMI", (DL_FUNC) &_infosp_RcppCMI, 6},
+    {"_infosp_RcppGenSignatureSpace", (DL_FUNC) &_infosp_RcppGenSignatureSpace, 2},
     {NULL, NULL, 0}
 };
 

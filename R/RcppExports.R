@@ -45,3 +45,7 @@ RcppCMI <- function(mat, target, interact, conds, base = 2.0, NA_rm = FALSE) {
     .Call(`_infosp_RcppCMI`, mat, target, interact, conds, base, NA_rm)
 }
 
+RcppGenSignatureSpace <- function(mat, relative = TRUE) {
+    .Call(`_infosp_RcppGenSignatureSpace`, mat, relative)
+}
+
