@@ -188,7 +188,7 @@ std::vector<std::vector<uint8_t>> vec2pat(const Rcpp::IntegerVector& v)
     // 2. Map value → index
     std::unordered_map<int, uint64_t> dict;
     for (uint64_t i = 0; i < uniq.size(); ++i)
-        dict[uniq[i]] = i;
+        dict[uniq[i]] = i+1;
 
     // 3. Encode each observation
     for (int i = 0; i < v.size(); ++i)
@@ -240,7 +240,7 @@ std::vector<std::vector<uint8_t>> vec2pat(const Rcpp::NumericVector& v)
 
     std::unordered_map<double, uint64_t> dict;
     for (uint64_t i = 0; i < uniq.size(); ++i)
-        dict[uniq[i]] = i;
+        dict[uniq[i]] = i+1;
 
     for (int i = 0; i < v.size(); ++i)
     {
@@ -288,7 +288,7 @@ std::vector<std::vector<uint8_t>> vec2pat(const Rcpp::CharacterVector& v)
 
     std::unordered_map<std::string, uint64_t> dict;
     for (uint64_t i = 0; i < uniq.size(); ++i)
-        dict[uniq[i]] = i;
+        dict[uniq[i]] = i+1;
 
     for (int i = 0; i < v.size(); ++i)
     {
