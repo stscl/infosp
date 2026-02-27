@@ -162,9 +162,6 @@ namespace Dist
         if (vec1.size() != vec2.size())
             throw std::invalid_argument("Vectors must have equal length.");
 
-        std::vector<double> x_clean;
-        std::vector<double> y_clean;
-
         if (!na_rm)
         {
             for (size_t i = 0; i < vec1.size(); ++i)
