@@ -35,79 +35,7 @@
 #include <algorithm>
 
 namespace Dist
-{
-    /***********************************************************
-     * Utilities
-     ***********************************************************/
-    inline bool is_na(double x)
-    {
-        return std::isnan(x);
-    }
-
-    inline double compute_distance(
-        const std::vector<double>& x,
-        const std::vector<double>& y,
-        const std::string& method)
-    {
-        if (x.size() != y.size())
-            throw std::invalid_argument("Vectors must have equal length.");
-
-        if (x.empty())
-            return std::numeric_limits<double>::quiet_NaN();
-
-        if (method == "euclidean")
-        {
-            double sum = 0.0;
-            for (size_t i = 0; i < x.size(); ++i)
-            {
-                double d = x[i] - y[i];
-                sum += d * d;
-            }
-            return std::sqrt(sum);
-        }
-        else if (method == "manhattan")
-        {
-            double sum = 0.0;
-            for (size_t i = 0; i < x.size(); ++i)
-            {
-                sum += std::abs(x[i] - y[i]);
-            }
-            return sum;
-        }
-        else if (method == "maximum")
-        {
-            double maxv = 0.0;
-            for (size_t i = 0; i < x.size(); ++i)
-            {
-                maxv = std::max(maxv, std::abs(x[i] - y[i]));
-            }
-            return maxv;
-        }
-        else
-        {
-            throw std::invalid_argument("Unsupported distance method.");
-        }
-    }
-
-    inline void remove_na_pairwise(
-        const std::vector<double>& x,
-        const std::vector<double>& y,
-        std::vector<double>& x_clean,
-        std::vector<double>& y_clean)
-    {
-        x_clean.clear();
-        y_clean.clear();
-
-        for (size_t i = 0; i < x.size(); ++i)
-        {
-            if (!is_na(x[i]) && !is_na(y[i]))
-            {
-                x_clean.push_back(x[i]);
-                y_clean.push_back(y[i]);
-            }
-        }
-    }
-
+{   
     /***********************************************************
      * Scalar - Scalar
      ***********************************************************/
@@ -200,6 +128,78 @@ namespace Dist
         }
 
         return result;
+    }
+    
+    /***********************************************************
+     * Utilities
+     ***********************************************************/
+    inline bool is_na(double x)
+    {
+        return std::isnan(x);
+    }
+
+    inline double compute_distance(
+        const std::vector<double>& x,
+        const std::vector<double>& y,
+        const std::string& method)
+    {
+        if (x.size() != y.size())
+            throw std::invalid_argument("Vectors must have equal length.");
+
+        if (x.empty())
+            return std::numeric_limits<double>::quiet_NaN();
+
+        if (method == "euclidean")
+        {
+            double sum = 0.0;
+            for (size_t i = 0; i < x.size(); ++i)
+            {
+                double d = x[i] - y[i];
+                sum += d * d;
+            }
+            return std::sqrt(sum);
+        }
+        else if (method == "manhattan")
+        {
+            double sum = 0.0;
+            for (size_t i = 0; i < x.size(); ++i)
+            {
+                sum += std::abs(x[i] - y[i]);
+            }
+            return sum;
+        }
+        else if (method == "maximum")
+        {
+            double maxv = 0.0;
+            for (size_t i = 0; i < x.size(); ++i)
+            {
+                maxv = std::max(maxv, std::abs(x[i] - y[i]));
+            }
+            return maxv;
+        }
+        else
+        {
+            throw std::invalid_argument("Unsupported distance method.");
+        }
+    }
+
+    inline void remove_na_pairwise(
+        const std::vector<double>& x,
+        const std::vector<double>& y,
+        std::vector<double>& x_clean,
+        std::vector<double>& y_clean)
+    {
+        x_clean.clear();
+        y_clean.clear();
+
+        for (size_t i = 0; i < x.size(); ++i)
+        {
+            if (!is_na(x[i]) && !is_na(y[i]))
+            {
+                x_clean.push_back(x[i]);
+                y_clean.push_back(y[i]);
+            }
+        }
     }
 
     /***********************************************************
