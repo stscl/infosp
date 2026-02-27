@@ -174,7 +174,7 @@ namespace Dist
         {
             for (size_t i = 0; i < vec1.size(); ++i)
             {
-                if (is_na(vec1[i]) || is_na(vec2[i]))
+                if (std::isnan(vec1[i]) || std::isnan(vec2[i]))
                     return std::vector<double>(
                         vec1.size(),
                         std::numeric_limits<double>::quiet_NaN());
@@ -193,7 +193,7 @@ namespace Dist
 
         for (size_t i = 0; i < vec1.size(); ++i)
         {
-            if (!is_na(vec1[i]) && !is_na(vec2[i]))
+            if (!std::isnan(vec1[i]) && !std::isnan(vec2[i]))
             {
                 result[i] = std::abs(vec1[i] - vec2[i]);
             }
