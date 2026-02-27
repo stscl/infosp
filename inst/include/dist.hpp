@@ -56,8 +56,7 @@ namespace Dist
      ***********************************************************/
     inline std::vector<double> dist(
         const double scalar,
-        const std::vector<double>& vec,
-        bool na_rm = true)
+        const std::vector<double>& vec)
     {
         std::vector<double> result(vec.size(),
             std::numeric_limits<double>::quiet_NaN());
@@ -75,10 +74,9 @@ namespace Dist
 
     inline std::vector<double> dist(
         const std::vector<double>& vec,
-        const double scalar,
-        bool na_rm = true)
+        const double scalar)
     {
-        return dist(scalar, vec, na_rm)
+        return dist(scalar, vec)
     }
 
     /***********************************************************
