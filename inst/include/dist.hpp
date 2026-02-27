@@ -157,7 +157,6 @@ namespace Dist
     inline std::vector<double> dist(
         const std::vector<double>& vec1,
         const std::vector<double>& vec2,
-        std::string method = "euclidean",
         bool na_rm = true)
     {
         if (vec1.size() != vec2.size())
