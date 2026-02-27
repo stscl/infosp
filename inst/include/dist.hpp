@@ -61,12 +61,14 @@ namespace Dist
         std::vector<double> result(vec.size(),
             std::numeric_limits<double>::quiet_NaN());
 
+        if (std::isnan(scalar)) return result;
+
         for (size_t i = 0; i < vec.size(); ++i)
         {
-            if (na_rm && (std::isnan(vec[i]) || std::isnan(scalar)))
-                continue;
-
-            result[i] = std::abs(vec[i] - scalar);
+            if (!std::isnan(vec[i]))
+            {
+                result[i] = std::abs(vec[i] - scalar);
+            }
         }
 
         return result;
