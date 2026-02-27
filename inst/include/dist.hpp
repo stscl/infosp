@@ -82,27 +82,63 @@ namespace Dist
     }
 
     /***********************************************************
-     * Vector - Scalar
-     * Result length equals vector length
-     ***********************************************************/
+    * Vector - Scalar
+    * Scalar is internally expanded to vector length
+    * Result is a single double distance value
+    ***********************************************************/
     inline double dist(
         const std::vector<double>& vec,
         const double scalar,
         std::string method = "euclidean",
         bool na_rm = true)
     {
-        std::vector<double> result(vec.size(),
-            std::numeric_limits<double>::quiet_NaN());
+        if (vec.empty() || std::isnan(scalar))
+            return std::numeric_limits<double>::quiet_NaN();
+
+        double sum = 0.0;
+        double maxv = 0.0;
+        size_t n_valid = 0;
 
         for (size_t i = 0; i < vec.size(); ++i)
         {
-            if (na_rm && (std::isnan(vec[i]) || std::isnan(scalar)))
+            if (na_rm && std::isnan(vec[i]))
                 continue;
 
-            result[i] = std::abs(vec[i] - scalar);
+            if (!na_rm && std::isnan(vec[i]))
+                return std::numeric_limits<double>::quiet_NaN();
+
+            double diff = vec[i] - scalar;
+            double ad   = std::abs(diff);
+
+            if (method == "euclidean")
+            {
+                sum += diff * diff;
+            }
+            else if (method == "manhattan")
+            {
+                sum += ad;
+            }
+            else if (method == "maximum")
+            {
+                if (ad > maxv) maxv = ad;
+            }
+            else
+            {
+                throw std::invalid_argument("Unsupported distance method.");
+            }
+
+            ++n_valid;
         }
 
-        return result;
+        if (n_valid == 0)
+            return std::numeric_limits<double>::quiet_NaN();
+
+        if (method == "euclidean")
+            return std::sqrt(sum);
+        else if (method == "manhattan")
+            return sum;
+        else
+            return maxv;  // maximum
     }
 
     /***********************************************************
