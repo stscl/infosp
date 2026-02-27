@@ -551,17 +551,17 @@ inline PatternCausalityRes ComputePatternCausality(
     const std::vector<std::vector<double>>& pred_SMy,
     bool weighted = true
 )
-{
+{   
     PatternCausalityRes res;
 
-    const size_t n = PX.size();
+    const size_t n = SMx.size();
     if (n == 0) return res;
     
     /* ------------------------------------------------------------
      *  1. Generate symbolic pattern
      * ------------------------------------------------------------ */
     std::vector<std::vector<uint8_t>> PX = GenPatternSpace(SMx, true);
-    std::vector<std::vector<uint8_t>> PY = GenPatternSpace(SMy, true);
+    std::vector<std::vector<uint8_t>> PY_real = GenPatternSpace(SMy, true);
     std::vector<std::vector<uint8_t>> PY_pred = GenPatternSpace(pred_SMy, true);
 
     /* ------------------------------------------------------------
