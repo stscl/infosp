@@ -145,7 +145,7 @@ namespace Dist
 
         for (size_t i = 0; i < vec.size(); ++i)
         {
-            if (na_rm && (is_na(vec[i]) || is_na(scalar)))
+            if (na_rm && (std::isnan(vec[i]) || std::isnan(scalar)))
                 continue;
 
             result[i] = std::abs(vec[i] - scalar);
