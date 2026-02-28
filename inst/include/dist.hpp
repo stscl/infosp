@@ -78,7 +78,7 @@ namespace Dist
         const std::vector<double>& vec,
         const double scalar)
     {
-        return dist(scalar, vec)
+        return dist(scalar, vec);
     }
 
     /***********************************************************
