@@ -246,44 +246,21 @@ namespace Dist
     {
         const size_t n = mat.size();
 
-        std::vector<std::vector<double>> result(
+        std::vector<std::vector<double>> distm(
             n,
             std::vector<double>(n,
                 std::numeric_limits<double>::quiet_NaN()));
 
-        for (size_t i = 0; i < n; ++i)
-        {
-            for (size_t j = i; j < n; ++j)
-            {
-                std::vector<double> x_clean;
-                std::vector<double> y_clean;
-
-                if (mat[i].size() != mat[j].size())
-                    throw std::invalid_argument("Matrix rows must have equal length.");
-
-                if (na_rm)
-                {
-                    remove_na_pairwise(mat[i], mat[j], x_clean, y_clean);
-
-                    if (x_clean.empty())
-                    {
-                        result[i][j] = result[j][i] =
-                            std::numeric_limits<double>::quiet_NaN();
-                        continue;
-                    }
-
-                    result[i][j] = result[j][i] =
-                        compute_distance(x_clean, y_clean, method);
-                }
-                else
-                {
-                    result[i][j] = result[j][i] =
-                        compute_distance(mat[i], mat[j], method);
-                }
+        for (size_t i = 0; i < n; ++i) {
+            for (size_t j = i+1; j < n; ++j) { 
+            double distv = dist(mat[i], mat[j], method, na_rm);
+            distm[i][j] = distv;  // Correctly assign distance to upper triangle
+            distm[j][i] = distv;  // Mirror the value to the lower triangle
+            // distm[i][j] = distm[j][i] = dist(mat[i], mat[j], method, na_rm);
             }
         }
 
-        return result;
+        return distm;
     }
 
 } // namespace Dist
