@@ -173,7 +173,11 @@ namespace Dist
 
         return result;
     }
-
+    
+    /***********************************************************
+     * Vector - Vector
+     * Result is a single double distance value
+     ***********************************************************/
     inline double dist(
         const std::vector<double>& vec1,
         const std::vector<double>& vec2,
