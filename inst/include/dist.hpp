@@ -174,6 +174,61 @@ namespace Dist
         return result;
     }
 
+    inline double dist(
+        const std::vector<double>& vec1,
+        const std::vector<double>& vec2,
+        std::string method = "euclidean",
+        bool na_rm = true)
+    {   
+        if (vec1.empty() || vec1.empty() || vec1.size() != vec2.size())
+            return std::numeric_limits<double>::quiet_NaN();
+
+        double sum = 0.0;
+        double maxv = 0.0;
+        size_t n_valid = 0;
+
+        for (size_t i = 0; i < vec1.size(); ++i)
+        {
+            if ((std::isnan(vec1[i]) || std::isnan(vec2[i])) && na_rm)
+                continue;
+
+            if ((std::isnan(vec1[i]) || std::isnan(vec2[i])) && !na_rm)
+                return std::numeric_limits<double>::quiet_NaN();
+
+            double diff = vec[i] - scalar;
+            double ad   = std::abs(diff);
+
+            if (method == "euclidean")
+            {
+                sum += diff * diff;
+            }
+            else if (method == "manhattan")
+            {
+                sum += ad;
+            }
+            else if (method == "maximum")
+            {
+                if (ad > maxv) maxv = ad;
+            }
+            else
+            {
+                throw std::invalid_argument("Unsupported distance method.");
+            }
+
+            ++n_valid;
+        }
+
+        if (n_valid == 0)
+            return std::numeric_limits<double>::quiet_NaN();
+
+        if (method == "euclidean")
+            return std::sqrt(sum);
+        else if (method == "manhattan")
+            return sum;
+        else
+            return maxv;  // maximum
+    }
+
     /***********************************************************
      * Utilities
      ***********************************************************/
