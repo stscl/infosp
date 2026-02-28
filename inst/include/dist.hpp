@@ -41,10 +41,9 @@ namespace Dist
      ***********************************************************/
     inline double dist(
         const double scalar1,
-        const double scalar2,
-        bool na_rm = true)
+        const double scalar2)
     {
-        if (na_rm && (std::isnan(scalar1) || std::isnan(scalar2)))
+        if (std::isnan(scalar1) || std::isnan(scalar2))
             return std::numeric_limits<double>::quiet_NaN();
 
         return std::abs(scalar1 - scalar2);
