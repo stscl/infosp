@@ -31,6 +31,7 @@
 #include <cmath>
 #include <limits>
 #include <string>
+#include <numeric>
 #include <stdexcept>
 #include <algorithm>
 
