@@ -111,9 +111,11 @@ namespace Projection
             valid_libs.reserve(lib.size());
 
             for (size_t i : lib) {
-                if (i == p) continue; // Skip self-matching
-
-                if (std::isnan(target[i])) continue; // Skip non-valid library
+                // Skip self-matching
+                if (i == p) continue; 
+                
+                // Skip non-valid library
+                if (std::isnan(target[i])) continue; 
 
                 double sum_s = 0.0;
                 double maxv = 0.0;
