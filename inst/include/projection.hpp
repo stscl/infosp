@@ -85,11 +85,11 @@ namespace Projection
 
             // If no valid distances found, prediction is NaN
             if (distances.empty()) {
-                ontinue;
+                continue;
             }
 
             // Adjust number of neighbors to available valid libs
-            size_t k = std::min(static_cast<size_t>(num_neighbors), distances.size());
+            size_t k = std::min(num_neighbors, distances.size());
 
             // Prepare indices for sorting
             std::vector<size_t> neighbors(distances.size());
