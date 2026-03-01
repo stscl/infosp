@@ -43,15 +43,14 @@ namespace Projection
             std::vector<size_t> valid_libs;
             valid_libs.reserve(lib.size());
 
-            for (int i : lib_indices) {
+            for (size_t i : lib) {
             if (i == p) continue; // Skip self-matching
 
             double sum_sq = 0.0;
-            std::size_t count = 0;
-            for (size_t j = 0; j < vectors[p].size(); ++j) {
-                if (!std::isnan(vectors[i][j]) && !std::isnan(vectors[p][j])) {
-                double diff = vectors[i][j] - vectors[p][j];
-                // sum_sq += (dist_metric == 1) ? std::abs(diff) : diff * diff;
+            size_t count = 0;
+            for (size_t j = 0; j < embedding[p].size(); ++j) {
+                if (!std::isnan(embedding[i][j]) && !std::isnan(embedding[p][j])) {
+                double diff = embedding[i][j] - embedding[p][j];
                 if (dist_metric == 1) {
                     sum_sq += std::abs(diff); // L1
                 } else {
