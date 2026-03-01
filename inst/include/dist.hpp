@@ -96,7 +96,7 @@ namespace Dist
         if (method == "maximum")   return DistanceMethod::Maximum;
         return DistanceMethod::Invalid;
     }
-    
+
     /***********************************************************
      * Scalar - Scalar
      ***********************************************************/
@@ -168,7 +168,6 @@ namespace Dist
                 return std::numeric_limits<double>::quiet_NaN();
 
             double diff = vec[i] - scalar;
-            double ad   = std::abs(diff);
 
             if (method == "euclidean")
             {
@@ -176,10 +175,11 @@ namespace Dist
             }
             else if (method == "manhattan")
             {
-                sum += ad;
+                sum += std::abs(diff);
             }
             else if (method == "maximum")
-            {
+            {   
+                double ad  = std::abs(diff);
                 if (ad > maxv) maxv = ad;
             }
             else
