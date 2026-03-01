@@ -15,10 +15,10 @@
  *          If all elements are removed, result is NaN.
  *
  *  Functions:
- *      dist(scalar, scalar)
- *      dist(vector, scalar)
- *      dist(vector, vector)
- *      dist(matrix)
+ *      Dist(scalar, scalar)
+ *      Dist(vector, scalar)
+ *      Dist(vector, vector)
+ *      Dist(matrix)
  *
  *  Author: Wenbo Lyu (Github: @SpatLyu)
  *  License: GPL-3
@@ -40,7 +40,7 @@ namespace Dist
     /***********************************************************
      * Scalar - Scalar
      ***********************************************************/
-    inline double dist(
+    inline double Dist(
         const double scalar1,
         const double scalar2)
     {
@@ -54,7 +54,7 @@ namespace Dist
      * Scalar - Vector
      * Result length equals vector length
      ***********************************************************/
-    inline std::vector<double> dist(
+    inline std::vector<double> Dist(
         const double scalar,
         const std::vector<double>& vec)
     {
@@ -74,11 +74,11 @@ namespace Dist
         return result;
     }
 
-    inline std::vector<double> dist(
+    inline std::vector<double> Dist(
         const std::vector<double>& vec,
         const double scalar)
     {
-        return dist(scalar, vec);
+        return Dist(scalar, vec);
     }
 
     /***********************************************************
@@ -86,7 +86,7 @@ namespace Dist
     * Scalar is internally expanded to vector length
     * Result is a single double distance value
     ***********************************************************/
-    inline double dist(
+    inline double Dist(
         const std::vector<double>& vec,
         const double scalar,
         std::string method = "euclidean",
@@ -141,20 +141,20 @@ namespace Dist
             return maxv;  // maximum
     }
 
-    inline double dist(
+    inline double Dist(
         const double scalar,
         const std::vector<double>& vec,
         std::string method = "euclidean",
         bool na_rm = true)
     {
-        return dist(vec, scalar, method, na_rm);
+        return Dist(vec, scalar, method, na_rm);
     }
 
     /***********************************************************
      * Vector - Vector
      * Element-wise distance
      ***********************************************************/
-    inline std::vector<double> dist(
+    inline std::vector<double> Dist(
         const std::vector<double>& vec1,
         const std::vector<double>& vec2)
     {
@@ -179,7 +179,7 @@ namespace Dist
      * Vector - Vector
      * Result is a single double distance value
      ***********************************************************/
-    inline double dist(
+    inline double Dist(
         const std::vector<double>& vec1,
         const std::vector<double>& vec2,
         std::string method = "euclidean",
@@ -240,7 +240,7 @@ namespace Dist
      * Matrix
      * Row-wise distance matrix
      ***********************************************************/
-    inline std::vector<std::vector<double>> dist(
+    inline std::vector<std::vector<double>> Dist(
         const std::vector<std::vector<double>>& mat,
         std::string method = "euclidean",
         bool na_rm = true)
@@ -271,7 +271,7 @@ namespace Dist
      * Each element (i, j) equals
      *      dist(mat[pred[i]], mat[lib[j]])
      ***********************************************************/
-    inline std::vector<std::vector<double>> dist(
+    inline std::vector<std::vector<double>> Dist(
         const std::vector<std::vector<double>>& mat,
         const std::vector<size_t>& lib,
         const std::vector<size_t>& pred,
