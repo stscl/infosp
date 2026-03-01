@@ -28,8 +28,8 @@ namespace Projection
             return pred;  // no valid neighbors to use, return all NaNs
         }
 
-        for (size_t pi = 0; pi < pred_indices.size(); ++pi) {
-            int p = pred_indices[pi];
+        for (size_t pi = 0; pi < pred.size(); ++pi) {
+            size_t p = pred[pi];
 
             // // Skip if target at prediction index is NaN
             // if (std::isnan(target[p])) {
@@ -38,10 +38,10 @@ namespace Projection
 
             // Compute distances only for valid vector pairs (exclude NaNs)
             std::vector<double> distances;
-            distances.reserve(lib_indices.size());
+            distances.reserve(lib.size());
             // keep track of libs corresponding to valid distances
-            std::vector<int> valid_libs;
-            valid_libs.reserve(lib_indices.size());
+            std::vector<size_t> valid_libs;
+            valid_libs.reserve(lib.size());
 
             for (int i : lib_indices) {
             if (i == p) continue; // Skip self-matching
