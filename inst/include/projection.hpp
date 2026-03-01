@@ -89,10 +89,10 @@ namespace Projection
         std::string method = "euclidean")
     {
         size_t N = target.size();
-        std::vector<double> pred(N, std::numeric_limits<double>::quiet_NaN());
+        std::vector<double> pred_t(N, std::numeric_limits<double>::quiet_NaN());
 
         if (num_neighbors == 0 || num_neighbors > lib.size()) {
-            return pred;  // no valid neighbors to use, return all NaNs
+            return pred_t;  // no valid neighbors to use, return all NaNs
         }
 
         for (size_t pi = 0; pi < pred.size(); ++pi) {
@@ -203,10 +203,10 @@ namespace Projection
                 prediction += weights[i] * target[valid_libs[neighbors[i]]];
             }
 
-            pred[p] = prediction / total_weight;
+            pred_t[p] = prediction / total_weight;
         }
 
-        return pred;
+        return pred_t;
     }
 
 } // namespace Projection
