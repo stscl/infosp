@@ -1,3 +1,44 @@
+/***************************************************************
+ *  projection.hpp
+ *
+ *  High performance state space projection methods
+ *  for nonlinear state prediction.
+ *
+ *  Core method:
+ *      Simplex Projection
+ *
+ *  Description:
+ *      Perform nearest neighbor prediction in reconstructed
+ *      state space using weighted simplex projection.
+ *
+ *  Distance methods:
+ *      "euclidean"  : sqrt(sum((x - y)^2))
+ *      "maximum"    : max(|x - y|)
+ *      "manhattan"  : sum(|x - y|)
+ *
+ *  NA handling:
+ *      NaN values inside embedding vectors are ignored
+ *      pairwise when computing distances.
+ *      If no valid dimension exists, the distance is skipped.
+ *
+ *  Data layout:
+ *      embedding  : std::vector<std::vector<double>>
+ *                   embedding[row][dimension]
+ *
+ *      target     : std::vector<double>
+ *                   observed values corresponding to rows
+ *
+ *      lib        : library indices used as neighbors
+ *      pred       : prediction indices
+ *
+ *  Output:
+ *      A vector of predictions aligned to target length.
+ *      Non predicted positions are NaN.
+ *
+ *  Author: Wenbo Lyu (Github: @SpatLyu)
+ *  License: GPL-3
+ ***************************************************************/
+
 #ifndef PROJECTION_HPP
 #define PROJECTION_HPP
 
