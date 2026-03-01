@@ -46,32 +46,46 @@ namespace Projection
             for (size_t i : lib) {
                 if (i == p) continue; // Skip self-matching
 
-                double sum_sq = 0.0;
-                size_t count = 0;
+                double sum_s = 0.0;
+                double maxv = 0.0;
+                size_t n_valid = 0;
+
                 for (size_t j = 0; j < embedding[p].size(); ++j) {
                     if (!std::isnan(embedding[i][j]) && !std::isnan(embedding[p][j])) {
                         double diff = embedding[i][j] - embedding[p][j];
-                        if (dist_metric == 1) {
-                            sum_sq += std::abs(diff); // L1
-                        } else {
-                            sum_sq += diff * diff;    // L2
+                        if (method == "euclidean") {
+                            sum_s += diff * diff;
                         }
-                        ++count;
+                        else if (method == "manhattan") {
+                            sum_s += std::abs(diff);
+                        }
+                        else if (method == "maximum") {
+                            double ad = std::abs(diff);
+                            if (ad > maxv) maxv = ad;
+                        }
+                        else {
+                            throw std::invalid_argument("Unsupported distance method.");
+                        }
+
+                        ++n_valid;
                     }
                 }
-                if (count > 0) {
-                    if (dist_metric == 1) {  // L1
-                        distances.push_back(sum_sq / (dist_average ? static_cast<double>(count) : 1.0));
-                    } else {                 // L2
-                        distances.push_back(std::sqrt(sum_sq / (dist_average ? static_cast<double>(count) : 1.0)));
-                    }
-                        valid_libs.push_back(i);
+
+                if (n_valid > 0) {
+                    if (method == "euclidean")
+                        distances.push_back(std::sqrt(sum_s));
+                    else if (method == "manhattan")
+                        distances.push_back(sum_s);
+                    else
+                        distances.push_back(maxv);
+                    
+                    valid_libs.push_back(i);    
                 }
             }
 
             // If no valid distances found, prediction is NaN
             if (distances.empty()) {
-            continue;
+                ontinue;
             }
 
             // Adjust number of neighbors to available valid libs
