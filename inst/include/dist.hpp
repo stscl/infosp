@@ -458,11 +458,7 @@ namespace Dist
 
                     if (element_has_na && na_rm) continue;
 
-                    if (element_has_na && !na_rm) 
-                    {
-                        distv = std::numeric_limits<double>::quiet_NaN();
-                        break;
-                    }
+                    if (element_has_na && !na_rm) break;
 
                     double diff = mat[pi][ei] - mat[lj][ei];
 
