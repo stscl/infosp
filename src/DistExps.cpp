@@ -61,6 +61,25 @@ Rcpp::NumericVector RcppDist4MatSub(
         }
     }
 
+    // Convert and check that lib and pred indices are within bounds & convert R based 1 index to C++ based 0 index
+    std::vector<size_t> lib_std;
+    lib_std.reserve(lib.size());
+    std::vector<size_t> pred_std;
+    pred_std.reserve(pred.size());
+
+    for (int i = 0; i < lib.size(); ++i) {
+        if (lib[i] < 1 || lib[i] > numRows) {
+            Rcpp::stop("lib contains out-of-bounds index at position %d (value: %d)", i + 1, lib[i]);
+        }
+        lib_std.push_back(static_cast<size_t>(lib[i] - 1));
+    }
+    for (int i = 0; i < pred.size(); ++i) {
+        if (pred[i] < 1 || pred[i] > numRows) {
+            Rcpp::stop("pred contains out-of-bounds index at position %d (value: %d)", i + 1, pred[i]);
+        }
+        pred_std.push_back(static_cast<size_t>(pred[i] - 1));
+    }
+
     // Call the distance function
     std::vector<std::vector<double>> distm = Dist::Dist(cppMat, method, na_rm);
 
