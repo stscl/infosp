@@ -130,18 +130,34 @@ namespace Projection
                 for (size_t j = 0; j < embedding[p].size(); ++j) {
                     if (!std::isnan(embedding[i][j]) && !std::isnan(embedding[p][j])) {
                         double diff = embedding[i][j] - embedding[p][j];
-                        if (method == "euclidean") {
-                            sum_s += diff * diff;
-                        }
-                        else if (method == "manhattan") {
-                            sum_s += std::abs(diff);
-                        }
-                        else if (method == "maximum") {
-                            double ad = std::abs(diff);
-                            if (ad > maxv) maxv = ad;
-                        }
-                        else {
-                            throw std::invalid_argument("Unsupported distance method.");
+                        // if (method == "euclidean") {
+                        //     sum_s += diff * diff;
+                        // }
+                        // else if (method == "manhattan") {
+                        //     sum_s += std::abs(diff);
+                        // }
+                        // else if (method == "maximum") {
+                        //     double ad = std::abs(diff);
+                        //     if (ad > maxv) maxv = ad;
+                        // }
+                        // else {
+                        //     throw std::invalid_argument("Unsupported distance method.");
+                        // }
+                        switch (dist_method) {
+                            case DistanceMethod::Euclidean:
+                                sum_s += diff * diff;
+                                break;
+                            case DistanceMethod::Manhattan:
+                                sum_s += std::abs(diff);
+                                break;
+                            case DistanceMethod::Maximum:
+                                {
+                                    double ad = std::abs(diff);
+                                    if (ad > maxv) maxv = ad;
+                                }
+                                break;
+                            default:
+                                break; 
                         }
 
                         ++n_valid;
