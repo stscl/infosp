@@ -51,6 +51,7 @@
 #include <stdexcept>
 #include <cstdint>
 #include "numericutils.hpp"
+#include "dist.hpp"
 
 namespace Projection
 {   
@@ -87,7 +88,12 @@ namespace Projection
         const std::vector<size_t>& pred,
         size_t num_neighbors = 4,
         std::string method = "euclidean")
-    {
+    {   
+        const DistanceMethod dist_method = Dist::parseDistanceMethod(method);
+        if (dist_method == Dist::DistanceMethod::Invalid) {
+            throw std::invalid_argument("Unsupported distance method: " + method);
+        }
+
         size_t N = target.size();
         std::vector<double> pred_t(N, std::numeric_limits<double>::quiet_NaN());
 
