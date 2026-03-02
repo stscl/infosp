@@ -145,13 +145,13 @@ namespace Projection
                         // }
 
                         switch (dist_method) {
-                            case DistanceMethod::Euclidean:
+                            case Dist::DistanceMethod::Euclidean:
                                 sum_s += diff * diff;
                                 break;
-                            case DistanceMethod::Manhattan:
+                            case Dist::DistanceMethod::Manhattan:
                                 sum_s += std::abs(diff);
                                 break;
-                            case DistanceMethod::Maximum:
+                            case Dist::DistanceMethod::Maximum:
                                 {
                                     double ad = std::abs(diff);
                                     if (ad > maxv) maxv = ad;
