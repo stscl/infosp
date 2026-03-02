@@ -196,7 +196,7 @@ namespace Dist
 
         if (n_valid == 0)
             return std::numeric_limits<double>::quiet_NaN();
-        
+
         if (dist_method == DistanceMethod::Euclidean)
             return std::sqrt(sum);
         else if (dist_method == DistanceMethod::Manhattan)
@@ -376,7 +376,7 @@ namespace Dist
             {
                 const size_t lj = lib[j];
 
-                distm[pi][lj] = dist(
+                distm[pi][lj] = Dist(
                     mat[pi],
                     mat[lj],
                     method,
