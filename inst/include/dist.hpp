@@ -32,6 +32,7 @@
 #include <limits>
 #include <string>
 #include <numeric>
+#include <cstdint>
 #include <stdexcept>
 #include <algorithm>
 
