@@ -313,6 +313,8 @@ namespace Dist
         std::string method = "euclidean",
         bool na_rm = true)
     {   
+        if (mat.empty()) return {};
+        
         const DistanceMethod dist_method = parseDistanceMethod(method);
         if (dist_method == DistanceMethod::Invalid) {
             throw std::invalid_argument("Unsupported distance method: " + method);
