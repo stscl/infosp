@@ -5,6 +5,10 @@ RcppDist4Mat <- function(mat, method = "euclidean", na_rm = TRUE) {
     .Call(`_infosp_RcppDist4Mat`, mat, method, na_rm)
 }
 
+RcppDist4MatSub <- function(mat, lib, pred, method = "euclidean", na_rm = TRUE) {
+    .Call(`_infosp_RcppDist4MatSub`, mat, lib, pred, method, na_rm)
+}
+
 RcppLaggedNeighbors4Lattice <- function(nb, lag = 1L, cumulate = TRUE) {
     .Call(`_infosp_RcppLaggedNeighbors4Lattice`, nb, lag, cumulate)
 }

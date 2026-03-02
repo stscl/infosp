@@ -22,6 +22,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RcppDist4MatSub
+Rcpp::NumericVector RcppDist4MatSub(const Rcpp::NumericMatrix& mat, const Rcpp::IntegerVector& lib, const Rcpp::IntegerVector& pred, const std::string& method, bool na_rm);
+RcppExport SEXP _infosp_RcppDist4MatSub(SEXP matSEXP, SEXP libSEXP, SEXP predSEXP, SEXP methodSEXP, SEXP na_rmSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type lib(libSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type pred(predSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type method(methodSEXP);
+    Rcpp::traits::input_parameter< bool >::type na_rm(na_rmSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppDist4MatSub(mat, lib, pred, method, na_rm));
+    return rcpp_result_gen;
+END_RCPP
+}
 // RcppLaggedNeighbors4Lattice
 Rcpp::List RcppLaggedNeighbors4Lattice(const Rcpp::List& nb, int lag, bool cumulate);
 RcppExport SEXP _infosp_RcppLaggedNeighbors4Lattice(SEXP nbSEXP, SEXP lagSEXP, SEXP cumulateSEXP) {
@@ -201,6 +215,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_infosp_RcppDist4Mat", (DL_FUNC) &_infosp_RcppDist4Mat, 3},
+    {"_infosp_RcppDist4MatSub", (DL_FUNC) &_infosp_RcppDist4MatSub, 5},
     {"_infosp_RcppLaggedNeighbors4Lattice", (DL_FUNC) &_infosp_RcppLaggedNeighbors4Lattice, 3},
     {"_infosp_RcppLaggedValues4Lattice", (DL_FUNC) &_infosp_RcppLaggedValues4Lattice, 3},
     {"_infosp_RcppGenLatticeEmbedding", (DL_FUNC) &_infosp_RcppGenLatticeEmbedding, 5},
