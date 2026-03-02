@@ -70,7 +70,7 @@ Rcpp::NumericVector RcppDist4MatSub(
         }
         lib_std.push_back(static_cast<size_t>(lib[i] - 1));
     }
-    
+
     std::vector<size_t> pred_std;
     pred_std.reserve(pred.size());
     for (int i = 0; i < pred.size(); ++i) {
@@ -81,7 +81,8 @@ Rcpp::NumericVector RcppDist4MatSub(
     }
 
     // Call the distance function
-    std::vector<std::vector<double>> distm = Dist::Dist(cppMat, method, na_rm);
+    std::vector<std::vector<double>> distm = Dist::Dist(
+        cppMat, lib_std, pred_std, method, na_rm);
 
     // Convert std::vector<std::vector<double>> to Rcpp::NumericMatrix
     int rows = distm.size();
