@@ -312,7 +312,12 @@ namespace Dist
         const std::vector<std::vector<double>>& mat,
         std::string method = "euclidean",
         bool na_rm = true)
-    {
+    {   
+        const DistanceMethod dist_method = parseDistanceMethod(method);
+        if (dist_method == DistanceMethod::Invalid) {
+            throw std::invalid_argument("Unsupported distance method: " + method);
+        }
+
         const size_t n = mat.size();
 
         std::vector<std::vector<double>> distm(
@@ -322,7 +327,59 @@ namespace Dist
 
         for (size_t i = 0; i < n; ++i) {
             for (size_t j = i+1; j < n; ++j) { 
-            double distv = Dist(mat[i], mat[j], method, na_rm);
+            // double distv = Dist(mat[i], mat[j], method, na_rm);
+            double distv;
+
+            double sum = 0.0;
+            double maxv = 0.0;
+            size_t n_valid = 0;
+
+            for (size_t ei = 0; ei < mat[i].size(); ++ei)
+            {   
+                bool element_has_na = std::isnan(mat[i][ei]) || std::isnan(mat[j][ei]);
+
+                if (element_has_na && na_rm) continue;
+
+                if (element_has_na && !na_rm) 
+                {
+                    distv = std::numeric_limits<double>::quiet_NaN();
+                    break;
+                }
+
+                double diff = mat[i][ei] - mat[j][ei];
+
+                switch (dist_method) {
+                    case DistanceMethod::Euclidean:
+                        sum += diff * diff;
+                        break;
+                    case DistanceMethod::Manhattan:
+                        sum += std::abs(diff);
+                        break;
+                    case DistanceMethod::Maximum:
+                        {
+                            double ad = std::abs(diff);
+                            if (ad > maxv) maxv = ad;
+                        }
+                        break;
+                    default:
+                        break; 
+                }
+
+                ++n_valid;
+            }
+
+            if (n_valid == 0)
+            {
+                distv = std::numeric_limits<double>::quiet_NaN();
+            }
+
+            if (dist_method == DistanceMethod::Euclidean)
+                distv = std::sqrt(sum);
+            else if (dist_method == DistanceMethod::Manhattan)
+                distv = sum;
+            else
+                distv = maxv;  // maximum
+
             distm[i][j] = distv;  // Correctly assign distance to upper triangle
             distm[j][i] = distv;  // Mirror the value to the lower triangle
             // distm[i][j] = distm[j][i] = dist(mat[i], mat[j], method, na_rm);
