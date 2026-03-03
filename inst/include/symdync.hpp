@@ -115,6 +115,9 @@
 #include <algorithm>
 #include <stdexcept>
 #include <cstdint>
+#include <iterator>
+#include <unordered_map>
+#include <unordered_set>
 #include "numericutils.hpp"
 
 namespace SymDync
