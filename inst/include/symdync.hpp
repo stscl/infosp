@@ -28,7 +28,6 @@
  *     space matrix by computing successive differences or relative
  *     changes between adjacent time steps.
  *
- *
  *  2. GenPatternSpace
  *
  *     Converts a continuous signature matrix into compact discrete
@@ -38,12 +37,10 @@
  *
  *         std::vector<std::vector<uint8_t>>
  *
- *
  *  3. CountSignProp
  *
  *     Compares two symbolic pattern spaces and computes the
  *     proportion of sign agreement and disagreement.
- *
  *
  *  4. ComputePatternCausality
  *
