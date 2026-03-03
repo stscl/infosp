@@ -558,15 +558,15 @@ inline PatternCausalityRes ComputePatternCausality(
     if (n == 0) return res;
     
     /* ------------------------------------------------------------
-       1. Generate symbolic pattern
-       ------------------------------------------------------------ */
+     *  1. Generate symbolic pattern
+     * ------------------------------------------------------------ */
     std::vector<std::vector<uint8_t>> PX = GenPatternSpace(SMx, true);
     std::vector<std::vector<uint8_t>> PY = GenPatternSpace(SMy, true);
     std::vector<std::vector<uint8_t>> PY_pred = GenPatternSpace(pred_SMy, true);
 
     /* ------------------------------------------------------------
-       2. Collect and filter pattern space
-       ------------------------------------------------------------ */
+     *  2. Collect and filter pattern space
+     * ------------------------------------------------------------ */
     std::vector<std::vector<uint8_t>> all_patterns;
     all_patterns.reserve(n * 3);
 
@@ -592,8 +592,8 @@ inline PatternCausalityRes ComputePatternCausality(
     );
 
     /* ------------------------------------------------------------
-       3. Symmetric closure
-       ------------------------------------------------------------ */
+     *  3. Symmetric closure
+     * ------------------------------------------------------------ */
     size_t original_size = all_patterns.size();
 
     for (size_t i = 0; i < original_size; ++i)
@@ -619,8 +619,8 @@ inline PatternCausalityRes ComputePatternCausality(
     res.PatternSpace = all_patterns;
 
     /* ------------------------------------------------------------
-       4. Heatmap structures
-       ------------------------------------------------------------ */
+     *  4. Heatmap structures
+     * ------------------------------------------------------------ */
     std::vector<std::vector<double>> heatmap(
         K, std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())
     );
@@ -639,8 +639,8 @@ inline PatternCausalityRes ComputePatternCausality(
     const double midpoint = static_cast<double>(K - 1) / 2.0;
 
     /* ------------------------------------------------------------
-       5. Norm utility
-       ------------------------------------------------------------ */
+     *  5. Norm utility
+     * ------------------------------------------------------------ */
     auto norm_ignore_nan = [](const std::vector<double>& v)
     {
         double sum = 0.0;
@@ -650,8 +650,8 @@ inline PatternCausalityRes ComputePatternCausality(
     };
 
     /* ------------------------------------------------------------
-       6. Main loop
-       ------------------------------------------------------------ */
+     *  6. Main loop
+     * ------------------------------------------------------------ */
     for (size_t t = 0; t < n; ++t)
     {
         if (contains_zero(PX[t]) ||
@@ -715,8 +715,8 @@ inline PatternCausalityRes ComputePatternCausality(
     }
 
     /* ------------------------------------------------------------
-       7. Normalize heatmap
-       ------------------------------------------------------------ */
+     *  7. Normalize heatmap
+     * ------------------------------------------------------------ */
     for (size_t i = 0; i < K; ++i)
     {
         for (size_t j = 0; j < K; ++j)
@@ -729,8 +729,8 @@ inline PatternCausalityRes ComputePatternCausality(
     }
 
     /* ------------------------------------------------------------
-       8. Aggregated metrics
-       ------------------------------------------------------------ */
+     *  8. Aggregated metrics
+     * ------------------------------------------------------------ */
     std::vector<double> diag_vals;
     std::vector<double> anti_vals;
     std::vector<double> other_vals;
