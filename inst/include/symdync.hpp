@@ -554,7 +554,7 @@ inline PatternCausalityRes ComputePatternCausality(
 {   
     PatternCausalityRes res;
 
-    const size_t n = SMX.size();
+    const size_t n = SMx.size();
     if (n == 0) return res;
     
     /* ------------------------------------------------------------
