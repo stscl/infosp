@@ -236,9 +236,9 @@ std::vector<std::vector<size_t>> NN4Mat(
 
       if (n_valid == 0 || std::isnan(distv)) continue;
 
-      if (dist_method == DistanceMethod::Euclidean)
+      if (dist_method == Dist::DistanceMethod::Euclidean)
         distv = std::sqrt(sum);
-      else if (dist_method == DistanceMethod::Manhattan)
+      else if (dist_method == Dist::DistanceMethod::Manhattan)
         distv = sum;
       else
         distv = maxv;  // maximum
