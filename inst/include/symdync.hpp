@@ -551,10 +551,10 @@ inline PatternCausalityRes ComputePatternCausality(
     const std::vector<std::vector<double>>& pred_SMy,
     bool weighted = true
 )
-{
+{   
     PatternCausalityRes res;
 
-    const size_t n = PX.size();
+    const size_t n = SMX.size();
     if (n == 0) return res;
     
     /* ------------------------------------------------------------
