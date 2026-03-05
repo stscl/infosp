@@ -20,14 +20,6 @@
  *      "maximum"    : max(|x - y|)
  *      "manhattan"  : sum(|x - y|)
  *
- *  NA handling:
- *      If na_rm = true
- *          NA dimensions are ignored pairwise
- *          If no valid dimension exists distance is skipped
- *
- *      If na_rm = false
- *          Any NA in vector pair results in skipping that pair
- *
  *  Data layout:
  *      mat         : std::vector<std::vector<double>>
  *                    mat[row][dimension]
