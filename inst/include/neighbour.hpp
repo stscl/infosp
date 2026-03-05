@@ -193,6 +193,125 @@ namespace NN
      *      only pred position has values
      *
      ***********************************************************/
+    std::vector<std::vector<size_t>> NN4Mat(
+        const std::vector<std::vector<double>>& mat,
+        const std::vector<size_t>& lib,
+        const std::vector<size_t>& pred,
+        size_t k,
+        std::string method = "euclidean",
+        bool include_self = false)
+    {
+      const Dist::DistanceMethod dist_method = Dist::parseDistanceMethod(method);
+      if (dist_method == Dist::DistanceMethod::Invalid) {
+        throw std::invalid_argument("Unsupported distance method: " + method);
+      }
+
+      // if (k > lib.size()) {
+      //   throw std::invalid_argument("Invalid argument: k exceeds library set capacity " + std::to_string(lib.size()));
+      // }
+
+      const size_t n = mat.size();
+
+      // Initialize result with empty vectors
+      std::vector<std::vector<size_t>> result(n);
+
+      // Build lib membership lookup
+      std::unordered_set<size_t> lib_set(lib.begin(), lib.end());
+
+      for (size_t i : pred) {
+        std::vector<std::pair<double, size_t>> candidates;
+        bool self_in_lib = (lib_set.find(i) != lib_set.end());
+
+        for (size_t j : lib) 
+        {
+
+          if (i == j) continue;
+
+          double distv = 0.0;
+                    
+          double sum = 0.0;
+          double maxv = 0.0;
+          size_t n_valid = 0;
+
+          for (size_t ei = 0; ei < mat[i].size(); ++ei)
+          {   
+            bool element_has_na = std::isnan(mat[i][ei]) || std::isnan(mat[j][ei]);
+            if (element_has_na) continue;
+
+            double diff = mat[i][ei] - mat[j][ei];
+
+            switch (dist_method) {
+              case Dist::DistanceMethod::Euclidean:
+                sum += diff * diff;
+                break;
+              case Dist::DistanceMethod::Manhattan:
+                sum += std::abs(diff);
+                break;
+              case Dist::DistanceMethod::Maximum:
+              {
+                double ad = std::abs(diff);
+                if (ad > maxv) maxv = ad;
+              }
+                break;
+              default:
+                break; 
+            }
+
+            ++n_valid;
+          }
+
+          if (n_valid == 0) continue;
+
+          if (dist_method == Dist::DistanceMethod::Euclidean)
+            distv = std::sqrt(sum);
+          else if (dist_method == Dist::DistanceMethod::Manhattan)
+            distv = sum;
+          else
+            distv = maxv;  // maximum
+
+          candidates.emplace_back(distv, j);
+        }
+
+        std::vector<size_t> indices;
+        indices.reserve(k);
+        size_t effective_k = k;
+
+        // Handle self inclusion
+        if (include_self && self_in_lib) {
+          indices.push_back(i);
+          if (effective_k > 0) {
+            effective_k -= 1;
+          }
+        }
+
+        size_t num_neighbors = std::min(effective_k, candidates.size());
+
+        if (num_neighbors > 0) {
+
+          std::partial_sort(
+            candidates.begin(),
+            candidates.begin() + num_neighbors,
+            candidates.end(),
+            [](const std::pair<double, size_t>& a,
+              const std::pair<double, size_t>& b) {
+              if (!NumericUtils::doubleNearlyEqual(a.first, b.first)) {
+                return a.first < b.first;
+              } else {
+                return a.second < b.second;
+              }
+            }
+          );
+
+          for (size_t m = 0; m < num_neighbors; ++m) {
+            indices.push_back(candidates[m].second);
+          }
+        }
+
+        result[i] = std::move(indices);
+      }
+
+      return result;
+    }
 
     /***********************************************************
      * NN4DistMat
@@ -363,122 +482,4 @@ std::vector<std::vector<size_t>> NN4DistMat(
 
 
 
-std::vector<std::vector<size_t>> NN4Mat(
-    const std::vector<std::vector<double>>& mat,
-    const std::vector<size_t>& lib,
-    const std::vector<size_t>& pred,
-    size_t k,
-    std::string method = "euclidean",
-    bool include_self = false)
-{
-  const Dist::DistanceMethod dist_method = Dist::parseDistanceMethod(method);
-  if (dist_method == Dist::DistanceMethod::Invalid) {
-    throw std::invalid_argument("Unsupported distance method: " + method);
-  }
 
-  // if (k > lib.size()) {
-  //   throw std::invalid_argument("Invalid argument: k exceeds library set capacity " + std::to_string(lib.size()));
-  // }
-
-  const size_t n = mat.size();
-
-  // Initialize result with empty vectors
-  std::vector<std::vector<size_t>> result(n);
-
-  // Build lib membership lookup
-  std::unordered_set<size_t> lib_set(lib.begin(), lib.end());
-
-  for (size_t i : pred) {
-    std::vector<std::pair<double, size_t>> candidates;
-    bool self_in_lib = (lib_set.find(i) != lib_set.end());
-
-    for (size_t j : lib) 
-    {
-
-      if (i == j) continue;
-
-      double distv = 0.0;
-                
-      double sum = 0.0;
-      double maxv = 0.0;
-      size_t n_valid = 0;
-
-      for (size_t ei = 0; ei < mat[i].size(); ++ei)
-      {   
-        bool element_has_na = std::isnan(mat[i][ei]) || std::isnan(mat[j][ei]);
-        if (element_has_na) continue;
-
-        double diff = mat[i][ei] - mat[j][ei];
-
-        switch (dist_method) {
-          case Dist::DistanceMethod::Euclidean:
-            sum += diff * diff;
-            break;
-          case Dist::DistanceMethod::Manhattan:
-            sum += std::abs(diff);
-            break;
-          case Dist::DistanceMethod::Maximum:
-          {
-            double ad = std::abs(diff);
-            if (ad > maxv) maxv = ad;
-          }
-            break;
-          default:
-            break; 
-        }
-
-        ++n_valid;
-      }
-
-      if (n_valid == 0) continue;
-
-      if (dist_method == Dist::DistanceMethod::Euclidean)
-        distv = std::sqrt(sum);
-      else if (dist_method == Dist::DistanceMethod::Manhattan)
-        distv = sum;
-      else
-        distv = maxv;  // maximum
-
-      candidates.emplace_back(distv, j);
-    }
-
-    std::vector<size_t> indices;
-    indices.reserve(k);
-    size_t effective_k = k;
-
-    // Handle self inclusion
-    if (include_self && self_in_lib) {
-      indices.push_back(i);
-      if (effective_k > 0) {
-        effective_k -= 1;
-      }
-    }
-
-    size_t num_neighbors = std::min(effective_k, candidates.size());
-
-    if (num_neighbors > 0) {
-
-      std::partial_sort(
-        candidates.begin(),
-        candidates.begin() + num_neighbors,
-        candidates.end(),
-        [](const std::pair<double, size_t>& a,
-           const std::pair<double, size_t>& b) {
-          if (!NumericUtils::doubleNearlyEqual(a.first, b.first)) {
-            return a.first < b.first;
-          } else {
-            return a.second < b.second;
-          }
-        }
-      );
-
-      for (size_t m = 0; m < num_neighbors; ++m) {
-        indices.push_back(candidates[m].second);
-      }
-    }
-
-    result[i] = std::move(indices);
-  }
-
-  return result;
-}
