@@ -75,7 +75,7 @@ namespace NN
      *      4. Partial sort to obtain k nearest
      *
      ***********************************************************/
-    std::vector<std::vector<size_t>> NN4Mat(
+    inline std::vector<std::vector<size_t>> NN4Mat(
         const std::vector<std::vector<double>>& mat,
         size_t k,
         std::string method = "euclidean",
@@ -193,7 +193,7 @@ namespace NN
      *      only pred position has values
      *
      ***********************************************************/
-    std::vector<std::vector<size_t>> NN4Mat(
+    inline std::vector<std::vector<size_t>> NN4Mat(
         const std::vector<std::vector<double>>& mat,
         const std::vector<size_t>& lib,
         const std::vector<size_t>& pred,
@@ -320,7 +320,7 @@ namespace NN
      *      neighbor index list
      *
      ***********************************************************/
-    std::vector<std::vector<size_t>> NN4DistMat(
+    inline std::vector<std::vector<size_t>> NN4DistMat(
         const std::vector<std::vector<double>>& distmat,
         size_t k,
         bool include_self = false)
@@ -396,7 +396,7 @@ namespace NN
      *      only pred position has values
      *
      ***********************************************************/
-    std::vector<std::vector<size_t>> NN4DistMat(
+    inline std::vector<std::vector<size_t>> NN4DistMat(
         const std::vector<std::vector<double>>& distmat,
         const std::vector<size_t>& lib,
         const std::vector<size_t>& pred,
