@@ -1,3 +1,124 @@
+/***************************************************************
+ *  neighbour.hpp
+ *
+ *  High performance nearest neighbor search utilities
+ *  for matrix based state space and distance matrix data.
+ *
+ *  Core methods:
+ *      NN4Mat
+ *      NN4DistMat
+ *
+ *  Description:
+ *      Provide k-nearest neighbor index search for:
+ *          1. Raw feature matrix
+ *          2. Precomputed distance matrix
+ *
+ *      Supports full search and pred/lib restricted search.
+ *
+ *  Distance methods (for NN4Mat):
+ *      "euclidean"  : sqrt(sum((x - y)^2))
+ *      "maximum"    : max(|x - y|)
+ *      "manhattan"  : sum(|x - y|)
+ *
+ *  NA handling:
+ *      If na_rm = true
+ *          NA dimensions are ignored pairwise
+ *          If no valid dimension exists distance is skipped
+ *
+ *      If na_rm = false
+ *          Any NA in vector pair results in skipping that pair
+ *
+ *  Data layout:
+ *      mat         : std::vector<std::vector<double>>
+ *                    mat[row][dimension]
+ *
+ *      distmat     : std::vector<std::vector<double>>
+ *                    symmetric distance matrix
+ *
+ *      pred        : prediction row indices
+ *      lib         : library row indices
+ *
+ *  Output:
+ *      std::vector<std::vector<size_t>>
+ *      Each row contains indices of nearest neighbors.
+ *
+ *  Notes:
+ *      Self matching is excluded by default.
+ *      If include_self = true, self index will be placed first.
+ *
+ *  Author: Wenbo Lyu (Github: @SpatLyu)
+ *  License: GPL-3
+ ***************************************************************/
+
+#ifndef NEIGHBOUR_HPP
+#define NEIGHBOUR_HPP
+
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <limits>
+#include <numeric>
+#include <unordered_set>
+#include <stdexcept>
+#include "numericutils.hpp"
+#include "distance.hpp"
+
+namespace NN
+{
+
+    /***********************************************************
+     * NN4Mat
+     *
+     * Parameters:
+     *      mat            feature matrix
+     *      k              number of neighbors
+     *      method         distance metric
+     *      include_self   whether include self index
+     *
+     * Returns:
+     *      neighbor index list for each row
+     *
+     * Algorithm:
+     *      1. For each row i
+     *      2. Compute distances to all other rows
+     *      3. Exclude self unless include_self = true
+     *      4. Partial sort to obtain k nearest
+     *
+     ***********************************************************/
+
+    /***********************************************************
+     * NN4Mat (pred/lib restricted version)
+     *
+     * Parameters:
+     *      mat            feature matrix
+     *      pred           prediction indices
+     *      lib            library indices
+     *      k              number of neighbors
+     *      method         distance metric
+     *      include_self   whether include self
+     *
+     * Returns:
+     *      neighbor index list aligned to full matrix size
+     *
+     ***********************************************************/
+
+    /***********************************************************
+     * NN4DistMat
+     *
+     * Parameters:
+     *      distmat        precomputed distance matrix
+     *      k              number of neighbors
+     *      include_self   whether include self
+     *
+     * Returns:
+     *      neighbor index list
+     *
+     ***********************************************************/
+
+} // namespace NN
+
+#endif // NEIGHBOUR_HPP
+
 /**
  * @brief Computes k-nearest neighbor indices for prediction rows from a given library.
  *
