@@ -131,6 +131,8 @@ namespace InfoTheo
         if (shift > 0)
             key.blocks.push_back(cur);
 
+        // key.blocks.push_back(static_cast<uint64_t>(p.size()));
+
         return true;
     }
 
@@ -170,10 +172,12 @@ namespace InfoTheo
                     shift = 0;
                 }
             }
-        }
 
-        if (shift > 0)
-            key.blocks.push_back(cur);
+            if (shift > 0)
+                key.blocks.push_back(cur);
+
+            key.blocks.push_back(static_cast<uint64_t>(p.size()));
+        }
 
         return true;
     }
@@ -238,6 +242,7 @@ namespace InfoTheo
           }
         }
         std::vector<size_t> clean_vars(valid_vars.begin(), valid_vars.end());
+        // std::sort(clean_vars.begin(), clean_vars.end());
 
         std::unordered_map<PackedKey, size_t, PackedKeyHash> freq;
         freq.reserve(n_obs * 1.3);
