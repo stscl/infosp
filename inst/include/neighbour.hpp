@@ -27,8 +27,9 @@
  *      distmat     : std::vector<std::vector<double>>
  *                    symmetric distance matrix
  *
- *      pred        : prediction row indices
  *      lib         : library row indices
+ *
+ *      pred        : prediction row indices
  *
  *  Output:
  *      std::vector<std::vector<size_t>>
