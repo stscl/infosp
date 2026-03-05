@@ -296,6 +296,10 @@ std::vector<std::vector<size_t>> NN4Mat(
     throw std::invalid_argument("Unsupported distance method: " + method);
   }
 
+  if (k > lib.size()) {
+    throw std::invalid_argument("Invalid argument: k exceeds library set capacity " + std::to_string(lib.size()));
+  }
+
   const size_t n = mat.size();
 
   // Initialize result with empty vectors
