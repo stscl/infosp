@@ -341,13 +341,13 @@ std::vector<std::vector<size_t>> NN4Mat(
         double diff = mat[i][ei] - mat[j][ei];
 
         switch (dist_method) {
-          case DistanceMethod::Euclidean:
+          case Dist::DistanceMethod::Euclidean:
             sum += diff * diff;
             break;
-          case DistanceMethod::Manhattan:
+          case Dist::DistanceMethod::Manhattan:
             sum += std::abs(diff);
             break;
-          case DistanceMethod::Maximum:
+          case Dist::DistanceMethod::Maximum:
           {
             double ad = std::abs(diff);
             if (ad > maxv) maxv = ad;
