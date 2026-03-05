@@ -373,8 +373,8 @@ std::vector<std::vector<size_t>> NN4Mat(
 
 std::vector<std::vector<size_t>> NN4Mat(
     const std::vector<std::vector<double>>& mat,
-    const std::vector<size_t>& pred,
     const std::vector<size_t>& lib,
+    const std::vector<size_t>& pred,
     size_t k,
     std::string method = "euclidean",
     bool include_self = false)
