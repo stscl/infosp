@@ -188,16 +188,9 @@ namespace NN
     /***********************************************************
      * NN4Mat (pred/lib restricted version)
      *
-     * Parameters:
-     *      mat            feature matrix
-     *      pred           prediction indices
-     *      lib            library indices
-     *      k              number of neighbors
-     *      method         distance metric
-     *      include_self   whether include self
-     *
      * Returns:
-     *      neighbor index list aligned to full matrix size
+     *      neighbor index list aligned to full matrix size,
+     *      only pred position has values
      *
      ***********************************************************/
 
