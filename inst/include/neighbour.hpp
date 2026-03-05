@@ -111,32 +111,10 @@ namespace NN
 
 #endif // NEIGHBOUR_HPP
 
-/**
- * @brief Computes k-nearest neighbor indices for prediction rows from a given library.
- *
- * For each index in `pred`, this function finds up to `k` nearest neighbors
- * from the index set `lib`, based on a precomputed distance matrix.
- *
- * If `include_self` is true and the prediction index is also contained in `lib`,
- * the index itself will be placed as the first neighbor. Otherwise, self will
- * be excluded from the candidate neighbors.
- *
- * The output vector has size equal to distmat.size(). For indices not in `pred`,
- * the corresponding entry is an empty vector.
- *
- * @param distmat       Precomputed n x n distance matrix (may contain NaN).
- * @param pred          Indices for which neighbors should be computed.
- * @param lib           Candidate neighbor indices.
- * @param k             Number of neighbors to retain.
- * @param include_self  Whether to include the index itself if it is in lib.
- *
- * @return A vector of length n. For each i in pred, contains up to k neighbor
- *         indices from lib sorted by increasing distance. Other rows are empty.
- */
 std::vector<std::vector<size_t>> NN4DistMat(
     const std::vector<std::vector<double>>& distmat,
-    const std::vector<size_t>& pred,
     const std::vector<size_t>& lib,
+    const std::vector<size_t>& pred,
     size_t k,
     bool include_self = false)
 { 
