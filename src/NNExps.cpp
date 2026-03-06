@@ -4,12 +4,12 @@
 #include <limits>
 #include <numeric>
 #include <algorithm>
-#include "distance.hpp"
-#include <Rcpp.h>
+#include "neighbour.hpp"
+#include "DataTrans.h"
 
 // Wrapper function to compute the nearest neighbours for an input feature matrix
 // [[Rcpp::export(rng = false)]]
-Rcpp::IntegerVector RcppDist4Mat(
+Rcpp::List RcppNN4Mat(
     const Rcpp::NumericMatrix& mat,
     int k,
     std::string& method = "euclidean",
