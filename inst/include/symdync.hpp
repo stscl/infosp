@@ -186,7 +186,6 @@
 
 namespace SymDync
 {
-
     /**
     * @brief Computes the Signature Space Matrix from a State Space Matrix.
     *
