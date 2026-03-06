@@ -81,3 +81,29 @@ Rcpp::List RcppNN4MatSub(
     // Return nb object (List in R side)
     return std2nb(neighbours);
 }
+
+// Wrapper function to compute the nearest neighbours for an input distance matrix
+// [[Rcpp::export(rng = false)]]
+Rcpp::List RcppNN4DistMat(
+    const Rcpp::NumericMatrix& distmat,
+    int k,
+    bool include_self = false
+) {
+    // Convert Rcpp::NumericMatrix to std::vector<std::vector<double>>
+    int numRows = distmat.nrow();
+    int numCols = distmat.ncol();
+    std::vector<std::vector<double>> cppMat(numRows, std::vector<double>(numCols));
+
+    for (int r = 0; r < numRows; ++r) {
+        for (int c = 0; c < numCols; ++c) {
+            cppMat[r][c] = distmat(r, c);
+        }
+    }
+
+    // Call the neighbpurbood function
+    std::vector<std::vector<size_t>> neighbours = NN::NN4DistMat(
+        cppMat, static_cast<size_t>(std::abs(k)), include_self);
+
+    // Return nb object (List in R side)
+    return std2nb(neighbours);
+}
