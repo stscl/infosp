@@ -9,7 +9,7 @@
 
 // Wrapper function to compute the nearest neighbours for an input feature matrix
 // [[Rcpp::export(rng = false)]]
-Rcpp::NumericVector RcppDist4Mat(
+Rcpp::IntegerVector RcppDist4Mat(
     const Rcpp::NumericMatrix& mat,
     int k,
     std::string& method = "euclidean",
@@ -27,16 +27,16 @@ Rcpp::NumericVector RcppDist4Mat(
     }
 
     // Call the neighbpurbood function
-    std::vector<std::vector<size_t>> distm = NN::NN4Mat(
+    std::vector<std::vector<size_t>> neighbours = NN::NN4Mat(
         cppMat, static_cast<size_t>(std::abs(k)), method, include_self);
 
-    // Convert std::vector<std::vector<double>> to Rcpp::NumericMatrix
+    // Convert std::vector<std::vector<size_t>> to Rcpp::IntegerMatrix
     int rows = distm.size();
     int cols = distm[0].size();
     Rcpp::NumericMatrix result(rows, cols);
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
-        result(i, j) = distm[i][j];
+            result(i, j) = distm[i][j];
         }
     }
 
