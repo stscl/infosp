@@ -777,7 +777,7 @@ namespace SymDync
 
         return res;
     }
-
+    
 } // namespace SymDync
 
 #endif // SYMDYNC_HPP
