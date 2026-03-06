@@ -61,6 +61,10 @@ RcppNN4Mat <- function(mat, k, method = "euclidean", include_self = FALSE) {
     .Call(`_infosp_RcppNN4Mat`, mat, k, method, include_self)
 }
 
+RcppNN4MatSub <- function(mat, lib, pred, k, method = "euclidean", include_self = FALSE) {
+    .Call(`_infosp_RcppNN4MatSub`, mat, lib, pred, k, method, include_self)
+}
+
 RcppGenSignatureSpace <- function(mat, relative = TRUE) {
     .Call(`_infosp_RcppGenSignatureSpace`, mat, relative)
 }

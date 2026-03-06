@@ -205,6 +205,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RcppNN4MatSub
+Rcpp::List RcppNN4MatSub(const Rcpp::NumericMatrix& mat, const Rcpp::IntegerVector& lib, const Rcpp::IntegerVector& pred, int k, std::string method, bool include_self);
+RcppExport SEXP _infosp_RcppNN4MatSub(SEXP matSEXP, SEXP libSEXP, SEXP predSEXP, SEXP kSEXP, SEXP methodSEXP, SEXP include_selfSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type lib(libSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type pred(predSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
+    Rcpp::traits::input_parameter< bool >::type include_self(include_selfSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppNN4MatSub(mat, lib, pred, k, method, include_self));
+    return rcpp_result_gen;
+END_RCPP
+}
 // RcppGenSignatureSpace
 Rcpp::NumericMatrix RcppGenSignatureSpace(const Rcpp::NumericMatrix& mat, bool relative);
 RcppExport SEXP _infosp_RcppGenSignatureSpace(SEXP matSEXP, SEXP relativeSEXP) {
@@ -255,6 +270,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_infosp_RcppMI", (DL_FUNC) &_infosp_RcppMI, 5},
     {"_infosp_RcppCMI", (DL_FUNC) &_infosp_RcppCMI, 6},
     {"_infosp_RcppNN4Mat", (DL_FUNC) &_infosp_RcppNN4Mat, 4},
+    {"_infosp_RcppNN4MatSub", (DL_FUNC) &_infosp_RcppNN4MatSub, 6},
     {"_infosp_RcppGenSignatureSpace", (DL_FUNC) &_infosp_RcppGenSignatureSpace, 2},
     {"_infosp_RcppGenPatternSpace", (DL_FUNC) &_infosp_RcppGenPatternSpace, 2},
     {"_infosp_RcppCountSignProp", (DL_FUNC) &_infosp_RcppCountSignProp, 2},
