@@ -57,6 +57,10 @@ RcppCMI <- function(mat, target, interact, conds, base = 2.0, na_rm = TRUE) {
     .Call(`_infosp_RcppCMI`, mat, target, interact, conds, base, na_rm)
 }
 
+RcppNN4Mat <- function(mat, k, method = "euclidean", include_self = FALSE) {
+    .Call(`_infosp_RcppNN4Mat`, mat, k, method, include_self)
+}
+
 RcppGenSignatureSpace <- function(mat, relative = TRUE) {
     .Call(`_infosp_RcppGenSignatureSpace`, mat, relative)
 }

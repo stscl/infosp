@@ -12,7 +12,7 @@
 Rcpp::List RcppNN4Mat(
     const Rcpp::NumericMatrix& mat,
     int k,
-    std::string& method = "euclidean",
+    std::string method = "euclidean",
     bool include_self = false
 ) {
     // Convert Rcpp::NumericMatrix to std::vector<std::vector<double>>
