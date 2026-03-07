@@ -45,7 +45,7 @@ Rcpp::NumericMatrix RcppGenSignatureSpace(
 // Wrapper function to convert a continuous signature matrix into symbolic pattern vector
 // [[Rcpp::export(rng = false)]]
 Rcpp::CharacterVector RcppGenPatternSpace(
-    Rcpp::NumericMatrix mat,
+    const Rcpp::NumericMatrix& mat,
     bool na_rm = true
 )
 {
