@@ -258,23 +258,23 @@ BEGIN_RCPP
 END_RCPP
 }
 // RcppGenPatternSpace
-Rcpp::CharacterVector RcppGenPatternSpace(Rcpp::NumericMatrix mat, bool na_rm);
+Rcpp::CharacterVector RcppGenPatternSpace(const Rcpp::NumericMatrix& mat, bool na_rm);
 RcppExport SEXP _infosp_RcppGenPatternSpace(SEXP matSEXP, SEXP na_rmSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type mat(matSEXP);
     Rcpp::traits::input_parameter< bool >::type na_rm(na_rmSEXP);
     rcpp_result_gen = Rcpp::wrap(RcppGenPatternSpace(mat, na_rm));
     return rcpp_result_gen;
 END_RCPP
 }
 // RcppCountSignProp
-Rcpp::NumericVector RcppCountSignProp(Rcpp::CharacterVector pat1, Rcpp::CharacterVector pat2);
+Rcpp::NumericVector RcppCountSignProp(const Rcpp::CharacterVector& pat1, const Rcpp::CharacterVector& pat2);
 RcppExport SEXP _infosp_RcppCountSignProp(SEXP pat1SEXP, SEXP pat2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type pat1(pat1SEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type pat2(pat2SEXP);
+    Rcpp::traits::input_parameter< const Rcpp::CharacterVector& >::type pat1(pat1SEXP);
+    Rcpp::traits::input_parameter< const Rcpp::CharacterVector& >::type pat2(pat2SEXP);
     rcpp_result_gen = Rcpp::wrap(RcppCountSignProp(pat1, pat2));
     return rcpp_result_gen;
 END_RCPP
