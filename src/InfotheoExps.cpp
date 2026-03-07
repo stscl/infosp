@@ -140,9 +140,9 @@ double RcppMI(SEXP mat,
 // Wrapper function to calculate conditional mutual information
 // [[Rcpp::export(rng = false)]]
 double RcppCMI(SEXP mat,
-               Rcpp::IntegerVector target,
-               Rcpp::IntegerVector interact,
-               Rcpp::IntegerVector conds,
+               const Rcpp::IntegerVector& target,
+               const Rcpp::IntegerVector& interact,
+               const Rcpp::IntegerVector& conds,
                double base = 2.0,
                bool na_rm = true)
 {
