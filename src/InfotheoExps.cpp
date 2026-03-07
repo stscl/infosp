@@ -72,8 +72,8 @@ double RcppJE(SEXP mat,
 // Wrapper function to calculate conditional entropy
 // [[Rcpp::export(rng = false)]]
 double RcppCE(SEXP mat,
-              Rcpp::IntegerVector target,
-              Rcpp::IntegerVector conds,
+              const Rcpp::IntegerVector& target,
+              const Rcpp::IntegerVector& conds,
               double base = 2.0,
               bool na_rm = true)
 {
