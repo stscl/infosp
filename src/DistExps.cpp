@@ -39,7 +39,7 @@ Rcpp::NumericVector RcppDist4Mat(
 
     for (int r = 0; r < numRows; ++r) {
         for (int c = 0; c < numCols; ++c) {
-        cppMat[r][c] = mat(r, c);
+            cppMat[r][c] = mat(r, c);
         }
     }
 
@@ -52,7 +52,7 @@ Rcpp::NumericVector RcppDist4Mat(
     Rcpp::NumericMatrix result(rows, cols);
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
-        result(i, j) = distm[i][j];
+            result(i, j) = distm[i][j];
         }
     }
 
