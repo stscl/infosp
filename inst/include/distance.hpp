@@ -22,7 +22,6 @@
  *
  *  Author: Wenbo Lyu (Github: @SpatLyu)
  *  License: GPL-3
- *
  ***************************************************************/
 
 #ifndef DIST_HPP
