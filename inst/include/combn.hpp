@@ -38,24 +38,27 @@ namespace Combn
      * @return std::vector<std::vector<T>> All possible m-combinations
      */
     template <typename T>
-    inline std::vector<std::vector<T>> Combn(const std::vector<T>& vec, int m)
+    inline std::vector<std::vector<T>> Combn(const std::vector<T>& vec, size_t m)
     {
         std::vector<std::vector<T>> result;
         std::vector<T> current;
 
-        const int vec_size = static_cast<int>(vec.size());
+        const size_t vec_size = vec.size();
 
-        std::function<void(int)> helper = [&](int start)
+        if (m == 0 || m > vec_size)
+            return result;
+
+        std::function<void(size_t)> helper = [&](size_t start)
         {
-            if (static_cast<int>(current.size()) == m)
+            if (current.size() == m)
             {
                 result.push_back(current);
                 return;
             }
 
-            int remaining = m - static_cast<int>(current.size());
+            size_t remaining = m - current.size();
 
-            for (int i = start; i <= vec_size - remaining; ++i)
+            for (size_t i = start; i <= vec_size - remaining; ++i)
             {
                 current.push_back(vec[i]);
                 helper(i + 1);
@@ -86,7 +89,9 @@ namespace Combn
     {
         std::vector<std::vector<T>> allSubsets;
 
-        for (int m = 1; m <= static_cast<int>(vec.size()); ++m)
+        const std::size_t n = vec.size();
+
+        for (std::size_t m = 1; m <= n; ++m)
         {
             std::vector<std::vector<T>> combs = Combn(vec, m);
             allSubsets.insert(allSubsets.end(), combs.begin(), combs.end());
