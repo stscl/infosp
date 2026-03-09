@@ -1,6 +1,7 @@
-/**
- * @file combn.hpp
- * @brief Combinatorial utilities for generating combinations and subsets.
+/***************************************************************
+ * File: combn.hpp
+ *
+ * Combinatorial utilities for generating combinations and subsets.
  *
  * Provides helper template functions for:
  *   - Generating all m-combinations from a given vector.
@@ -9,8 +10,8 @@
  * Implemented using recursive backtracking with minimal dependencies.
  * Suitable for general-purpose combinatorial enumeration tasks.
  *
- * Author: Your Name
- * License: GPL-3
+ *  Author: Wenbo Lyu (Github: @SpatLyu)
+ *  License: GPL-3
  */
 
 #ifndef COMBN_HPP
