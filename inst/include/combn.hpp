@@ -89,9 +89,9 @@ namespace Combn
     {
         std::vector<std::vector<T>> allSubsets;
 
-        const std::size_t n = vec.size();
+        const size_t n = vec.size();
 
-        for (std::size_t m = 1; m <= n; ++m)
+        for (size_t m = 1; m <= n; ++m)
         {
             std::vector<std::vector<T>> combs = Combn(vec, m);
             allSubsets.insert(allSubsets.end(), combs.begin(), combs.end());
