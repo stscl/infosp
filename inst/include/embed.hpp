@@ -1,5 +1,4 @@
 /*******************************************************************
- *
  *  File: embed.hpp
  *
  *  Spatial embedding utilities for lattice/grid structures and 
@@ -28,7 +27,6 @@
  *
  *  Author: Wenbo Lyu (Github: @SpatLyu)
  *  License: GPL-3
- *
  *******************************************************************/
 
 #ifndef EMBED_HPP
