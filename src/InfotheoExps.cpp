@@ -192,9 +192,6 @@ Rcpp::List RcppSURD(SEXP mat,
 {
     InfoTheo::Matrix m = mat2patmat(mat);
 
-    if (threads < 1)
-        threads = 1;
-
     SURD::SURDRes res =
         SURD::SURD(m, base, na_rm, normalize, (size_t)threads);
 
