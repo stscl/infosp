@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <cmath>
 #include "combn.hpp"
 #include <Rcpp.h>
 
