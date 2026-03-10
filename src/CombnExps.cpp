@@ -40,15 +40,8 @@ Rcpp::List RcppCombn(SEXP vec, int m) {
     }
 }
 
-/**
- * @brief Rcpp wrapper for Combn::GenSubsets
- * 
- * Generate all non-empty subsets from an integer, numeric, or character vector.
- * 
- * @param vec SEXP: integer vector (INTSXP), numeric vector (REALSXP), or character vector (STRSXP)
- * @return Rcpp::List: list of vectors, each containing one non-empty subset
- */
-// [[Rcpp::export]]
+// Wrapper function to generate all non-empty subsets from an integer, numeric, or character vector.
+// [[Rcpp::export(rng = false)]]
 Rcpp::List RcppGenSubsets(SEXP vec) {
     switch (TYPEOF(vec)) {
         case INTSXP: {
