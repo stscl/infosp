@@ -210,7 +210,11 @@ namespace SURD
         bool na_rm = true,
         bool normalize = false,
         size_t threads = 1)
-    {
+    {   
+        if (threads == 0) threads = 1;
+        size_t hw = std::thread::hardware_concurrency();
+        if (hw > 0) threads = std::min(threads, hw);
+
         SURDRes result;
 
         if (mat.size() < 2)
