@@ -10,6 +10,27 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// RcppCombn
+Rcpp::List RcppCombn(SEXP vec, int m);
+RcppExport SEXP _infosp_RcppCombn(SEXP vecSEXP, SEXP mSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< SEXP >::type vec(vecSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppCombn(vec, m));
+    return rcpp_result_gen;
+END_RCPP
+}
+// RcppGenSubsets
+Rcpp::List RcppGenSubsets(SEXP vec);
+RcppExport SEXP _infosp_RcppGenSubsets(SEXP vecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< SEXP >::type vec(vecSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppGenSubsets(vec));
+    return rcpp_result_gen;
+END_RCPP
+}
 // RcppDist4Vec
 double RcppDist4Vec(const Rcpp::NumericVector& v1, const Rcpp::NumericVector& v2, std::string method, bool na_rm);
 RcppExport SEXP _infosp_RcppDist4Vec(SEXP v1SEXP, SEXP v2SEXP, SEXP methodSEXP, SEXP na_rmSEXP) {
@@ -281,6 +302,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_infosp_RcppCombn", (DL_FUNC) &_infosp_RcppCombn, 2},
+    {"_infosp_RcppGenSubsets", (DL_FUNC) &_infosp_RcppGenSubsets, 1},
     {"_infosp_RcppDist4Vec", (DL_FUNC) &_infosp_RcppDist4Vec, 4},
     {"_infosp_RcppDist4Mat", (DL_FUNC) &_infosp_RcppDist4Mat, 3},
     {"_infosp_RcppDist4MatSub", (DL_FUNC) &_infosp_RcppDist4MatSub, 5},
