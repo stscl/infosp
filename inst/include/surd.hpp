@@ -104,7 +104,7 @@ inline EntropyMap precompute_entropies(
     bool na_rm,
     size_t n_threads)
 {
-    if (n_threads == 0)
+    if (n_threads == 0 || n_threads > std::thread::hardware_concurrency())
         n_threads = std::thread::hardware_concurrency();
 
     std::vector<std::vector<size_t>> tasks;
