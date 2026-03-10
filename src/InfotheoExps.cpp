@@ -239,7 +239,7 @@ Rcpp::List RcppSURD(SEXP mat,
                 types[i] = "U";
                 break;
             case 2:
-                types[i] = "D";
+                types[i] = "S";
                 break;
             default:
                 types[i] = "Unknown";
