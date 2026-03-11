@@ -222,8 +222,9 @@ namespace SURD
         if (mat.size() < 2)
             return result;
 
+        const size_t n_vars = mat.size();
         const size_t n_sources = mat.size() - 1;
-        const size_t n_vars = n_sources + 1;
+        max_order = std::min(max_order, n_sources);
 
         if (n_vars >= 63)
             throw std::invalid_argument("SURD supports <63 variables");
