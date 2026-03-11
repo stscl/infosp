@@ -210,7 +210,8 @@ namespace SURD
         double base = 2.0,
         bool na_rm = true,
         bool normalize = false,
-        size_t threads = 1)
+        size_t threads = 1,
+        size_t max_order = std::numeric_limits<size_t>::max())
     {   
         if (threads == 0) threads = 1;
         size_t hw = std::thread::hardware_concurrency();
@@ -285,7 +286,7 @@ namespace SURD
                     [](Entry* a, Entry* b)
                     {   
                         // return a->mi < b->mi;
-                        
+
                         if (!NumericUtils::doubleNearlyEqual(a->mi, b->mi))
                             return a->mi < b->mi;
 
