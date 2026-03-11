@@ -270,7 +270,7 @@ namespace SURD
                 entries.push_back({
                     std::max(0.0, mi),
                     mask,
-                    popcount[mask]
+                    order
                 });
             }
         }
