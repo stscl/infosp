@@ -352,15 +352,15 @@ std::vector<std::vector<std::vector<uint8_t>>> mat2patmat(SEXP x)
         const size_t p = m.ncol();
 
         mat.resize(p);
-        for (size_t j=0;j<p;++j)
+        for (size_t j = 0; j < p; ++j)
             mat[j].reserve(n);
 
         std::vector<int> uniq;
         uniq.reserve(n*p);
 
-        for (size_t j=0;j<p;++j)
+        for (size_t j = 0; j < p; ++j)
         {
-            for (size_t i=0;i<n;++i)
+            for (size_t i = 0; i < n; ++i)
             {
                 int v = m(i,j);
                 if (!Rcpp::IntegerVector::is_na(v))
@@ -374,14 +374,14 @@ std::vector<std::vector<std::vector<uint8_t>>> mat2patmat(SEXP x)
         std::unordered_map<int,uint64_t> dict;
         dict.reserve(uniq.size());
 
-        for (uint64_t i=0;i<uniq.size();++i)
+        for (uint64_t i = 0;i < uniq.size(); ++i)
             dict[uniq[i]] = i+1;
 
-        for (size_t j=0;j<p;++j)
+        for (size_t j = 0; j < p; ++j)
         {
             auto &col = mat[j];
 
-            for (size_t i=0;i<n;++i)
+            for (size_t i = 0;i < n; ++i)
             {
                 int v = m(i,j);
 
