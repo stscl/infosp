@@ -250,13 +250,18 @@ namespace SURD
         };
 
         size_t approx = 0;
-        for (size_t k = 1; k <= max_order; ++k)
-        {
-            size_t c = 1;
-            for (size_t i = 0; i < k; ++i)
-                c = c * (n_sources - i) / (i + 1);
-            approx += c;
+        if (n_sources > 30) {
+            approx = total_masks / 2;
+        } else {
+            for (size_t k = 1; k <= max_order; ++k)
+            {
+                size_t c = 1;
+                for (size_t i = 0; i < k; ++i)
+                    c = c * (n_sources - i) / (i + 1);
+                approx += c;
+            }
         }
+        
         std::vector<Entry> entries;
         entries.reserve(approx);
 
