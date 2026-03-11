@@ -471,7 +471,7 @@ std::vector<std::vector<std::vector<uint8_t>>> mat2patmat(SEXP x)
             for (size_t i = 0; i < n; ++i)
             {
                 if (!Rcpp::CharacterVector::is_na(m(i,j)))
-                    uniq.emplace_back(Rcpp::as<std::string>(m(i,j)));
+                    uniq.emplace_back(std::string(m(i,j)));
             }
         }
 
@@ -496,7 +496,7 @@ std::vector<std::vector<std::vector<uint8_t>>> mat2patmat(SEXP x)
                 }
                 else
                 {
-                    std::string key = Rcpp::as<std::string>(m(i,j));
+                    std::string key = std::string(m(i,j));
                     col.push_back(index2base4(dict[key]));
                 }
             }
