@@ -187,7 +187,7 @@ double RcppCMI(SEXP mat,
 Rcpp::List RcppSURD(SEXP mat,
                     double base = 2.0,
                     bool na_rm = true,
-                    bool normalize = false,
+                    bool normalize = true,
                     int threads = 1,
                     int max_order = 3)
 {
