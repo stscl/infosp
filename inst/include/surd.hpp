@@ -259,6 +259,10 @@ namespace SURD
             if (mask & 1ULL)
                 continue;
 
+            uint8_t order = popcount[mask];
+            if (order > max_order)
+                continue;
+
             double mi = compute_mi(H, mask);
 
             if (!std::isnan(mi) && mi >= -1e-12)
