@@ -43,6 +43,10 @@ double RcppSPE4Lattice(
 
     const size_t n_vars = v.size();
 
+    if (n_vars == 0 || n_obs == 0) {
+        return std::numeric_limits<double>::quiet_NaN();
+    }
+
     // Convert R neighbor structure -> std::vector<std::vector<size_t>>
     std::vector<std::vector<size_t>> nb_std = nb2std(nb);
 
