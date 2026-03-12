@@ -65,6 +65,30 @@ Rcpp::CharacterVector RcppGenPatternSpace(
     return pat2vec(pat);
 }
 
+// Wrapper function to generates a symbolic pattern representation from a continuous state space matrix.
+// [[Rcpp::export(rng = false)]]
+Rcpp::CharacterVector RcppGenSymbolization(
+    const Rcpp::NumericMatrix& mat,
+    bool relative = true,
+    bool na_rm = true
+)
+{
+    const size_t n_rows = mat.nrow();
+    const size_t n_cols = mat.ncol();
+
+    std::vector<std::vector<double>> input(
+        n_rows,
+        std::vector<double>(n_cols)
+    );
+
+    for (size_t i = 0; i < n_rows; ++i)
+        for (size_t j = 0; j < n_cols; ++j)
+            input[i][j] = mat(i, j);
+
+    auto pat = SymDync::GenSymbolization(input, relative, na_rm);
+    return pat2vec(pat);
+}
+
 // Wrapper function to compute sign agreement proportions between two pattern vectors
 // [[Rcpp::export(rng = false)]]
 Rcpp::NumericVector RcppCountSignProp(
