@@ -8,6 +8,8 @@
 #include "infotheo.hpp"
 #include "surd.hpp"
 
+// Wrapper function to calculate pattern entropy for spatial lattice data 
+// [[Rcpp::export(rng = false)]]
 double RcppSPE4Lattice(
     const Rcpp::NumericMatrix& mat,
     const Rcpp::IntegerVector& vars,
