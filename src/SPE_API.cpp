@@ -53,7 +53,10 @@ double RcppSPE4Lattice(
                                        static_cast<size_t>(std::abs(E)),
                                        static_cast<size_t>(std::abs(tau)),
                                        static_cast<size_t>(std::abs(style)));
+
+        pm[idx] = SymDync::GenSymbolicPattern(embeddings, relative, na_rm);
     }
+    
 
 
 }
