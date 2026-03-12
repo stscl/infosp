@@ -1,0 +1,1 @@
+double RcppSPE4Lattice
