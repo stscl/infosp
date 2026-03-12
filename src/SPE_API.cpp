@@ -1,6 +1,7 @@
 #include <vector>
 #include <cmath>
 #include <limits>
+#include <cstdint>
 #include <algorithm>
 #include "embed.hpp"
 #include "symdync.hpp"
@@ -18,7 +19,8 @@ double RcppSPE4Lattice(
     double base = 2.0,
     bool na_rm = true
 ) { 
-    const size_t n_cols = m.size();
+    const size_t n_cols = static_cast<size_t>(std::abs(mat.ncol()));
+    const size_t n_obs = static_cast<size_t>(std::abs(mat.nrow()));
 
     std::vector<size_t> v = Rcpp::as<std::vector<size_t>>(vars);
     for (auto& idx : v) {
@@ -29,6 +31,12 @@ double RcppSPE4Lattice(
         }
         idx -= 1;  // to 0-based
     }
+    const size_t n_vars = v.size();
 
-    
+    std::vector<std::vector<std::vector<uint8_t>>> pm;
+    pm.resize(n_vars);
+        for (size_t j = 0; j < n_vars; ++j)
+            mat[j].reserve(n_obs);
+
+
 }
