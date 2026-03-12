@@ -56,7 +56,6 @@ double RcppSPE4Lattice(
 
         pm[idx] = SymDync::GenSymbolicPattern(embeddings, relative, na_rm);
     }
-    
 
-
+    return InfoTheo::JE(pm, v, base, na_rm);
 }
