@@ -70,9 +70,9 @@ double RcppSPE4Lattice(
             Embed::GenLatticeEmbedding(
                 vec,
                 nb_std,
-                static_cast<size_t>(std::abs(E)),
-                static_cast<size_t>(std::abs(tau)),
-                static_cast<size_t>(std::abs(style))
+                static_cast<size_t>(std::abs(E[col_id])),
+                static_cast<size_t>(std::abs(tau[col_id])),
+                static_cast<size_t>(std::abs(style[col_id]))
             );
 
         // Convert continuous embedding -> symbolic patterns
