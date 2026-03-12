@@ -12,9 +12,9 @@ double RcppSPE4Lattice(
     const Rcpp::NumericMatrix& mat,
     const Rcpp::IntegerVector& vars,
     const Rcpp::List& nb,
-    int E = 3,
-    int tau = 1,
-    int style = 1,
+    const Rcpp::IntegerVector& E,
+    const Rcpp::IntegerVector& tau,
+    const Rcpp::IntegerVector& style,
     bool relative = true,
     double base = 2.0,
     bool na_rm = true
