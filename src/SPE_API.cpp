@@ -279,3 +279,97 @@ double RcppSPE4TS(
     // Compute Joint Entropy
     return InfoTheo::JE(pm, je_vars, base, na_rm);
 }
+
+// Wrapper function to calculate pattern mutual information for spatial lattice data 
+// [[Rcpp::export(rng = false)]]
+double RcppSPMI4Lattice(
+    const Rcpp::NumericMatrix& mat,
+    const Rcpp::IntegerVector& target,
+    const Rcpp::IntegerVector& interact,
+    const Rcpp::List& nb,
+    const Rcpp::IntegerVector& E,
+    const Rcpp::IntegerVector& tau,
+    const Rcpp::IntegerVector& style,
+    bool relative = true,
+    double base = 2.0,
+    bool na_rm = true
+) {
+    // Basic matrix dimensions
+    const size_t n_cols = static_cast<size_t>(mat.ncol());
+    const size_t n_obs  = static_cast<size_t>(mat.nrow());
+
+    // Convert R variable indices -> C++ (0-based)
+    std::vector<size_t> v = Rcpp::as<std::vector<size_t>>(vars);
+    for (auto& idx : v)
+    {
+        if (idx < 1 || idx > n_cols)
+        {
+            Rcpp::stop(
+                "Column index %d out of bounds [1, %d]",
+                static_cast<int>(idx),
+                static_cast<int>(n_cols)
+            );
+        }
+
+        idx -= 1;  // convert to 0-based indexing
+    }
+
+    const size_t n_vars = v.size();
+
+    if (n_vars == 0 || n_obs == 0) {
+        return std::numeric_limits<double>::quiet_NaN();
+    }
+
+    // Convert R neighbor structure -> std::vector<std::vector<size_t>>
+    std::vector<std::vector<size_t>> nb_std = nb2std(nb);
+
+    // Pattern matrix
+    std::vector<std::vector<std::vector<uint8_t>>> pm;
+    pm.resize(n_vars);
+
+    // Process each selected variable
+    for (size_t j = 0; j < n_vars; ++j)
+    {
+        size_t col_id = v[j];
+
+        // Extract column vector from R matrix
+        std::vector<double> vec(n_obs);
+        for (size_t r = 0; r < n_obs; ++r)
+        {
+            vec[r] = mat(r, col_id);
+        }
+
+        // Generate lattice embedding
+        std::vector<std::vector<double>> embeddings =
+            Embed::GenLatticeEmbedding(
+                vec,
+                nb_std,
+                static_cast<size_t>(std::abs(E[j])),
+                static_cast<size_t>(std::abs(tau[j])),
+                static_cast<size_t>(std::abs(style[j]))
+            );
+
+        // Convert continuous embedding -> symbolic patterns
+        pm[j] = SymDync::GenSymbolicPattern(
+            embeddings,
+            relative,
+            na_rm
+        );
+    }
+
+    // Construct variable index vector for JE
+    //
+    // pm layout:
+    //   pm[0], pm[1], ..., pm[n_vars-1]
+    //
+    // Therefore JE variables must be:
+    //   {0,1,...,n_vars-1}
+    std::vector<size_t> je_vars(n_vars);
+    for (size_t i = 0; i < n_vars; ++i)
+    {
+        je_vars[i] = i;
+    }
+
+    // Compute Joint Entropy
+    return InfoTheo::JE(pm, je_vars, base, na_rm);
+}
