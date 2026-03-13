@@ -161,7 +161,8 @@ double RcppSPE4Grid(
         size_t col_id = v[j];
 
         // Extract subset matrix from R matrix
-        std::vector<double> cm(nrows, std::vector<double>(n_obs / nrows));
+        std::vector<std::vector<double>> cm(
+            nrows, std::vector<double>(n_obs / nrows));
         for (size_t r = 0; r < n_obs; ++r)
         {
             cm[r % nrows][r / nrows] = mat(r, col_id);
