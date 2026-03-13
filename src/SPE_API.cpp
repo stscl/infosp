@@ -144,11 +144,6 @@ double RcppSPE4Grid(
     // Pattern matrix
     std::vector<std::vector<std::vector<uint8_t>>> pm;
     pm.resize(n_vars);
-    for (size_t j = 0; j < n_vars; ++j)
-    {
-        // Reserve space for observations to avoid repeated reallocations
-        pm[j].reserve(n_obs);
-    }
 
     // Process each selected variable
     for (size_t j = 0; j < n_vars; ++j)
@@ -167,9 +162,9 @@ double RcppSPE4Grid(
         std::vector<std::vector<double>> embeddings =
             Embed::GenLatticeEmbedding(
                 cm,
-                static_cast<size_t>(std::abs(E[col_id])),
-                static_cast<size_t>(std::abs(tau[col_id])),
-                static_cast<size_t>(std::abs(style[col_id]))
+                static_cast<size_t>(std::abs(E[j])),
+                static_cast<size_t>(std::abs(tau[j])),
+                static_cast<size_t>(std::abs(style[j]))
             );
 
         // Convert continuous embedding -> symbolic patterns
