@@ -320,17 +320,8 @@ double RcppSPMI4Lattice(
         idx -= 1;  // to 0-based
     }
 
-    std::unordered_set<size_t> unique_vars;
-    unique_vars.reserve(tv.size() + iv.size());
-    for (size_t idx : tv) {
-        unique_vars.insert(idx);
-    }
-    for (size_t idx : iv) {
-        unique_vars.insert(idx);
-    }
-    std::vector<size_t> vars(unique_vars.begin(), unique_vars.end());
-    std::sort(vars.begin(), vars.end());
-
+    std::vector<size_t> vars = tv;
+    vars.insert(vars.end(), iv.begin(), iv.end());
     const size_t n_vars = vars.size();
 
     if (n_vars == 0 || n_obs == 0) {
@@ -374,19 +365,13 @@ double RcppSPMI4Lattice(
         );
     }
 
-    // Construct variable index vector for JE
-    //
-    // pm layout:
-    //   pm[0], pm[1], ..., pm[n_vars-1]
-    //
-    // Therefore JE variables must be:
-    //   {0,1,...,n_vars-1}
-    std::vector<size_t> je_vars(n_vars);
-    for (size_t i = 0; i < n_vars; ++i)
-    {
-        je_vars[i] = i;
-    }
+    // Construct variable index vector for MI
+    std::vector<size_t> je_tv(tv.size());
+    std::iota(je_tv.begin(), je_tv.end(), 0);
 
-    // Compute Joint Entropy
-    return InfoTheo::JE(pm, je_vars, base, na_rm);
+    std::vector<size_t> je_iv(iv.size());
+    std::iota(je_iv.begin(), je_iv.end(), tv.size());
+
+    // Compute mutual information
+    return InfoTheo::MI(pm, je_tv, je_iv, base, na_rm);
 }
