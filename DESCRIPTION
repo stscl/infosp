@@ -31,4 +31,5 @@ Imports:
     terra
 Suggests: 
     Rcpp,
-    readr
+    readr,
+    spEDM
