@@ -158,9 +158,9 @@ double RcppSPE4Grid(
             cm[r % nrows][r / nrows] = mat(r, col_id);
         }
 
-        // Generate lattice embedding
+        // Generate grid embedding
         std::vector<std::vector<double>> embeddings =
-            Embed::GenLatticeEmbedding(
+            Embed::GenGridEmbedding(
                 cm,
                 static_cast<size_t>(std::abs(E[j])),
                 static_cast<size_t>(std::abs(tau[j])),
