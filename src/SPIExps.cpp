@@ -424,30 +424,27 @@ double RcppSPMI4Grid(
         return std::numeric_limits<double>::quiet_NaN();
     }
 
-    // Convert R neighbor structure -> std::vector<std::vector<size_t>>
-    std::vector<std::vector<size_t>> nb_std = nb2std(nb);
-
     // Pattern matrix
     std::vector<std::vector<std::vector<uint8_t>>> pm;
     pm.resize(n_vars);
 
     // Process each selected variable
     for (size_t j = 0; j < n_vars; ++j)
-    {
+    {   
         size_t col_id = vars[j];
 
-        // Extract column vector from R matrix
-        std::vector<double> vec(n_obs);
+        // Extract subset matrix from R matrix
+        std::vector<std::vector<double>> cm(
+            nrows, std::vector<double>(n_obs / nrows));
         for (size_t r = 0; r < n_obs; ++r)
         {
-            vec[r] = mat(r, col_id);
+            cm[r % nrows][r / nrows] = mat(r, col_id);
         }
 
-        // Generate lattice embedding
+        // Generate grid embedding
         std::vector<std::vector<double>> embeddings =
-            Embed::GenLatticeEmbedding(
-                vec,
-                nb_std,
+            Embed::GenGridEmbedding(
+                cm,
                 static_cast<size_t>(std::abs(E[j])),
                 static_cast<size_t>(std::abs(tau[j])),
                 static_cast<size_t>(std::abs(style[j]))
