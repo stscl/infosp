@@ -105,6 +105,10 @@ RcppSPMI4Grid <- function(mat, target, interact, E, tau, style, nrows, relative 
     .Call(`_infosp_RcppSPMI4Grid`, mat, target, interact, E, tau, style, nrows, relative, base, na_rm)
 }
 
+RcppSPMI4TS <- function(mat, target, interact, E, tau, style, relative = TRUE, base = 2.0, na_rm = TRUE) {
+    .Call(`_infosp_RcppSPMI4TS`, mat, target, interact, E, tau, style, relative, base, na_rm)
+}
+
 RcppGenSignatureSpace <- function(mat, relative = TRUE) {
     .Call(`_infosp_RcppGenSignatureSpace`, mat, relative)
 }
