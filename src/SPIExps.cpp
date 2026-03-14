@@ -591,7 +591,7 @@ Rcpp::List RcppPID4Lattice(
         idx -= 1;  // to 0-based
     }
     
-    const size_t target_idx = static_cast<size_t>(std::abs(target[0]))
+    const size_t target_idx = static_cast<size_t>(std::abs(target[0]));
     if (target_idx < 1 || target_idx > n_cols) {
         Rcpp::stop("Target index %d out of bounds [1, %d]", 
                     static_cast<int>(target_idx), 
