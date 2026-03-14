@@ -117,6 +117,10 @@ RcppPID4Grid <- function(mat, target, interact, E, tau, style, nrows, relative =
     .Call(`_infosp_RcppPID4Grid`, mat, target, interact, E, tau, style, nrows, relative, base, na_rm, normalize, threads, max_order)
 }
 
+RcppPID4TS <- function(mat, target, interact, E, tau, style, relative = TRUE, base = 2.0, na_rm = TRUE, normalize = TRUE, threads = 1L, max_order = 3L) {
+    .Call(`_infosp_RcppPID4TS`, mat, target, interact, E, tau, style, relative, base, na_rm, normalize, threads, max_order)
+}
+
 RcppGenSignatureSpace <- function(mat, relative = TRUE) {
     .Call(`_infosp_RcppGenSignatureSpace`, mat, relative)
 }
