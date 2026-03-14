@@ -669,17 +669,17 @@ Rcpp::List RcppPID4Lattice(
             continue;
         }
 
-        const auto& vars = res.var_indices[i];
+        const auto& var_indices = res.var_indices[i];
 
         std::string nm;
 
-        for (size_t j = 0; j < vars.size(); ++j)
+        for (size_t j = 0; j < var_indices.size(); ++j)
         {
             if (j > 0)
                 nm += "_";
 
             nm += "V";
-            nm += std::to_string(vars[j]);
+            nm += std::to_string(var_indices[j]);
         }
 
         names[i] = nm;
