@@ -655,7 +655,7 @@ Rcpp::List RcppPID4Lattice(
 
     // Compute information decomposition
     SURD::SURDRes res =
-        SURD::SURD(m, base, na_rm, normalize, 
+        SURD::SURD(pm, base, na_rm, normalize, 
                    static_cast<size_t>(std::abs(threads)),
                    static_cast<size_t>(std::abs(max_order)));
 
