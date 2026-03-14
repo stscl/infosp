@@ -581,16 +581,6 @@ Rcpp::List RcppPID4Lattice(
     const size_t n_obs  = static_cast<size_t>(mat.nrow());
 
     // Convert R variable indices -> C++ (0-based)
-    std::vector<size_t> tv = Rcpp::as<std::vector<size_t>>(target);
-    for (auto& idx : tv) {
-        if (idx < 1 || idx > n_cols) {
-            Rcpp::stop("Target index %d out of bounds [1, %d]", 
-                       static_cast<int>(idx), 
-                       static_cast<int>(n_cols));
-        }
-        idx -= 1;  // to 0-based
-    }
-
     std::vector<size_t> iv = Rcpp::as<std::vector<size_t>>(interact);
     for (auto& idx : iv) {
         if (idx < 1 || idx > n_cols) {
@@ -600,8 +590,15 @@ Rcpp::List RcppPID4Lattice(
         }
         idx -= 1;  // to 0-based
     }
+    
+    const size_t target_idx = static_cast<size_t>(std::abs(target[0]))
+    if (target_idx < 1 || target_idx > n_cols) {
+        Rcpp::stop("Target index %d out of bounds [1, %d]", 
+                    static_cast<int>(target_idx), 
+                    static_cast<int>(n_cols));
+    }
 
-    std::vector<size_t> vars = tv;
+    std::vector<size_t> vars = std::vector<size_t>{target_idx};
     vars.insert(vars.end(), iv.begin(), iv.end());
     const size_t n_vars = vars.size();
 
