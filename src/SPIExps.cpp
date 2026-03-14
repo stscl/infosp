@@ -755,9 +755,6 @@ Rcpp::List RcppPID4Grid(
         Rcpp::stop("Empty data.");
     }
 
-    // Convert R neighbor structure -> std::vector<std::vector<size_t>>
-    std::vector<std::vector<size_t>> nb_std = nb2std(nb);
-
     // Pattern matrix
     std::vector<std::vector<std::vector<uint8_t>>> pm;
     pm.resize(n_vars);
