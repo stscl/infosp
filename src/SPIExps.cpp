@@ -603,7 +603,7 @@ Rcpp::List RcppPID4Lattice(
     const size_t n_vars = vars.size();
 
     if (n_vars == 0 || n_obs == 0) {
-        return std::numeric_limits<double>::quiet_NaN();
+        Rcpp::stop("Empty data.");
     }
 
     // Convert R neighbor structure -> std::vector<std::vector<size_t>>
