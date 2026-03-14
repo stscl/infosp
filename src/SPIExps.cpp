@@ -598,7 +598,7 @@ Rcpp::List RcppPID4Lattice(
                     static_cast<int>(n_cols));
     }
 
-    std::vector<size_t> vars = std::vector<size_t>{target_idx};
+    std::vector<size_t> vars = std::vector<size_t>{target_idx - 1};
     vars.insert(vars.end(), iv.begin(), iv.end());
     const size_t n_vars = vars.size();
 
